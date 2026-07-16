@@ -2,6 +2,7 @@ import http from "node:http";
 import { getDatabase } from "./db.js";
 import { getHealthPayload } from "./health.js";
 import { handleRawCaptureRequest } from "./rawCaptureHandlers.js";
+import { handleTaskRequest } from "./taskHandlers.js";
 
 const host = "127.0.0.1";
 const port = 3001;
@@ -11,6 +12,11 @@ const server = http.createServer(async (request, response) => {
   try {
     const handled = await handleRawCaptureRequest(request, response, database);
     if (handled) {
+      return;
+    }
+
+    const taskHandled = await handleTaskRequest(request, response, database);
+    if (taskHandled) {
       return;
     }
   } catch (error) {

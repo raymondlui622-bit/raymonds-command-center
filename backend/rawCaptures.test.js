@@ -12,7 +12,6 @@ import {
 import { rawCaptureFixture } from "./rawCaptures.fixture.js";
 
 const futureModuleTables = [
-  "tasks",
   "review_later_resources",
   "projects",
   "project_updates",

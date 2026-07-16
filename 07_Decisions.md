@@ -148,3 +148,12 @@ Raymond identified a minor backlog item to trim whitespace for required string f
 
 ### 2026-07-16 - Milestone 3 completed as the first usable Raw Capture module
 Milestone 3 added Raw Capture backend handlers and a minimal frontend view for adding, viewing, and archiving captures. Archived captures remain retrievable. No AI classification, exports, future module tables, or new dependencies were added.
+
+### 2026-07-16 - Milestone 4 approved to begin
+Raymond approved Milestone 4 - Tasks and Waiting Tasks. The milestone must remain limited to Tasks as the single action, reminder, waiting, and follow-up system.
+
+### 2026-07-16 - Additional Raw Capture refinements deferred to backlog
+Raymond identified three future backlog items: trim leading/trailing whitespace before storing required string fields, return HTTP 400 for malformed JSON bodies instead of allowing JSON.parse errors to propagate, and restore keyboard focus to the capture textarea after saving. These should not be implemented unless they naturally fit a later milestone.
+
+### 2026-07-16 - Milestone 4 completed with Tasks as the follow-up system
+Milestone 4 added the `tasks` SQLite table, approved Task statuses, waiting-task fields, task data access, task backend handlers, a minimal frontend view, and tests. Waiting and follow-up behavior is represented by Tasks with `status = waiting`; no separate Follow-Up table or feature was created.

@@ -34,3 +34,5 @@
 - Node SQLite query rows use a null-prototype object shape, so tests should assert the behavioral contract instead of overfitting to plain object identity.
 - A minimal HTTP handler layer is enough for the first usable feature; a backend routing framework remains unnecessary.
 - Raw Capture UI should stay plain until more modules exist, because polish now could accidentally become dashboard design.
+- Task completion and archiving should update only their own status/timestamp fields so a state change cannot overwrite unrelated edits.
+- The no-separate-Follow-Up rule is easy to protect with a direct table-existence regression test.

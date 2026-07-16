@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 3 Complete.
+Phase 3 - Milestone 4 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -48,17 +48,27 @@ Phase 3 - Milestone 3 Complete.
 - Added Raw Capture handler tests.
 - Confirmed captures can be added, viewed, archived, and retrieved after archive.
 - Created `10_DELIVERABLES/Milestone 3 Verification.md`.
+- Raymond approved Milestone 4 - Tasks and Waiting Tasks.
+- Completed Milestone 4 - Tasks and Waiting Tasks.
+- Added Task schema initialization.
+- Added Task backend data access functions.
+- Added Task backend handlers.
+- Added a minimal Task frontend view.
+- Added Task fixtures, data-layer tests, and handler tests.
+- Confirmed waiting tasks use `status = waiting` and approved waiting fields.
+- Confirmed no separate Follow-Up table or feature exists.
+- Created `10_DELIVERABLES/Milestone 4 Verification.md`.
 
 ## Not Started
-- Milestone 4 - Tasks and Waiting Tasks.
-- Task schema and data access.
-- Task backend handlers.
-- Task frontend view.
+- Milestone 5 - Review Later Resources.
+- Review Later schema and data access.
+- Review Later backend handlers.
+- Review Later frontend view.
 - Integration planning.
 - Future module database tables.
 
 ## Current Blocker
-Milestone 4 is blocked until Raymond explicitly approves it to begin.
+Milestone 5 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 3 results. If approved, explicitly approve Milestone 4 - Tasks and Waiting Tasks.
+Review Milestone 4 results. If approved, explicitly approve Milestone 5 - Review Later Resources.

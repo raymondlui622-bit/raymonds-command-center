@@ -16,7 +16,8 @@
 - Milestone 1 - Local App Foundation is complete.
 - Milestone 2 - Raw Capture Data Slice is complete.
 - Milestone 3 - Raw Capture Feature is complete.
-- Do not continue to Milestone 4 without explicit approval.
+- Milestone 4 - Tasks and Waiting Tasks is complete.
+- Do not continue to Milestone 5 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -27,14 +28,19 @@
 ## Milestone 3 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 3 Verification.md`.
 
-## Milestone 4 Pending Approval
-- Tasks and Waiting Tasks.
-- Add Tasks as the single action, reminder, waiting, and follow-up system.
-- Do not create a separate Follow-Up table or feature.
-- Do not add Review Later, Projects, Search, Morning Brief, AI, or exports.
+## Milestone 4 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 4 Verification.md`.
+
+## Milestone 5 Pending Approval
+- Review Later Resources.
+- Save resources with title, type, URL/location, and why it matters.
+- Do not add Projects, Search, Morning Brief, AI, or exports.
+- Do not add future module tables.
 
 ## Backlog
 - Trim whitespace for required string fields before storing them when it naturally fits a future milestone.
+- Return HTTP 400 for malformed JSON bodies instead of allowing JSON.parse errors to propagate when it naturally fits a future milestone.
+- After saving a capture, restore keyboard focus to the capture textarea when it naturally fits a future milestone.
 
 ## Deferred Ideas
 These are future concepts, not approved Version 1 build scope:
@@ -58,7 +64,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 4 implementation
+- Milestone 5 implementation
 - Dashboard design
 - Future product modules
 - AI behavior
