@@ -39,3 +39,6 @@
 - Review Later fits the same simple module pattern as Tasks: migration, data access, handler, minimal view, and focused tests.
 - Future project links can be represented as nullable IDs before the Projects table exists, avoiding a premature foreign-key or relationship layer.
 - Milestone table-regression tests need to evolve as approved modules land, while still blocking unapproved future tables.
+- Project Updates should have create/list/read-style behavior only; omitting update/delete paths is the simplest way to preserve append-only history.
+- Calculated fields like `due_soon` are safest when added to returned objects instead of persisted schema.
+- Project linking for Tasks and Review Later can stay as one nullable string field until a later milestone proves stricter relationship behavior is needed.

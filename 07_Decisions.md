@@ -166,3 +166,12 @@ Raymond identified a future backlog item to consider validating waiting-task fie
 
 ### 2026-07-16 - Milestone 5 completed as the Review Later resource slice
 Milestone 5 added the `review_later_resources` SQLite table, approved Review Later statuses, resource data access, resource backend handlers, a minimal frontend view, and tests. Resources can preserve title, type, URL/location, why it matters, possible use, tags, notes, and one future primary project link. Archived resources remain retrievable.
+
+### 2026-07-16 - Milestone 6 approved to begin
+Raymond approved Milestone 6 - Projects and Project Updates. The milestone must remain limited to Projects and append-only Project Updates, with no Search, Morning Brief, AI, exports, UI polish, additional frameworks, or future module work.
+
+### 2026-07-16 - Malformed JSON and tag structure refinements deferred
+Raymond identified future backlog items to handle malformed JSON consistently across every API endpoint with HTTP 400 responses and to keep tags as a simple string until search requirements justify a more complex structure. These should not be implemented until a later milestone naturally calls for them.
+
+### 2026-07-16 - Milestone 6 completed with append-only Project Updates
+Milestone 6 added the `projects` and `project_updates` SQLite tables, approved Project statuses, Project data access, Project Update append-only creation/listing, Project backend handlers, a minimal frontend view, and tests. `due_soon` is calculated rather than stored, `active_reason` is stored, and Tasks/Review Later resources can link to one primary project.

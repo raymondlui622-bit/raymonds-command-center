@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 5 Complete.
+Phase 3 - Milestone 6 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -70,18 +70,32 @@ Phase 3 - Milestone 5 Complete.
 - Confirmed resources can store one primary project link for future Projects.
 - Confirmed archived resources remain retrievable.
 - Created `10_DELIVERABLES/Milestone 5 Verification.md`.
+- Raymond approved Milestone 6 - Projects and Project Updates.
+- Completed Milestone 6 - Projects and Project Updates.
+- Added Project schema initialization.
+- Added Project Update schema initialization.
+- Added Project and Project Update backend data access functions.
+- Added Project backend handlers.
+- Added a minimal Project frontend view.
+- Added Project fixtures, data-layer tests, and handler tests.
+- Confirmed Projects use approved simplified statuses.
+- Confirmed `due_soon` is calculated and not stored.
+- Confirmed `active_reason` is stored.
+- Confirmed Project Updates are append-only.
+- Confirmed current project fields can change without overwriting update history.
+- Confirmed Tasks and Review Later resources can link to one primary project.
+- Created `10_DELIVERABLES/Milestone 6 Verification.md`.
 
 ## Not Started
-- Milestone 6 - Projects and Project Updates.
-- Project schema and data access.
-- Project Update schema and data access.
-- Project backend handlers.
-- Project frontend view.
+- Milestone 7 - Search Foundation.
+- Search helpers/index setup.
+- Search backend handler.
+- Search results view.
 - Integration planning.
 - Future module database tables.
 
 ## Current Blocker
-Milestone 6 is blocked until Raymond explicitly approves it to begin.
+Milestone 7 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 5 results. If approved, explicitly approve Milestone 6 - Projects and Project Updates.
+Review Milestone 6 results. If approved, explicitly approve Milestone 7 - Search Foundation.

@@ -9,6 +9,8 @@ function App() {
   const [captures, setCaptures] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [reviewLaterResources, setReviewLaterResources] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [projectUpdates, setProjectUpdates] = useState({});
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -24,6 +26,7 @@ function App() {
     loadCaptures();
     loadTasks();
     loadReviewLaterResources();
+    loadProjects();
   }, []);
 
   async function loadCaptures() {
@@ -42,6 +45,19 @@ function App() {
     const response = await fetch(`${apiBaseUrl}/review-later`);
     const data = await response.json();
     setReviewLaterResources(data.resources);
+  }
+
+  async function loadProjects() {
+    const response = await fetch(`${apiBaseUrl}/projects`);
+    const data = await response.json();
+    setProjects(data.projects);
+    await Promise.all(data.projects.map((project) => loadProjectUpdates(project.id)));
+  }
+
+  async function loadProjectUpdates(projectId) {
+    const response = await fetch(`${apiBaseUrl}/projects/${projectId}/updates`);
+    const data = await response.json();
+    setProjectUpdates((current) => ({ ...current, [projectId]: data.updates }));
   }
 
   async function saveCapture(event) {
@@ -131,6 +147,82 @@ function App() {
 
     setMessage("Task archived.");
     await loadTasks();
+  }
+
+  async function saveProject(event) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/projects`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(projectPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Project was not saved.");
+      return;
+    }
+
+    event.currentTarget.reset();
+    setMessage("Project saved.");
+    await loadProjects();
+  }
+
+  async function updateProject(event, id) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/projects/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(projectPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Project was not updated.");
+      return;
+    }
+
+    setMessage("Project updated.");
+    await loadProjects();
+  }
+
+  async function archiveProject(id) {
+    const response = await fetch(`${apiBaseUrl}/projects/${id}/archive`, {
+      method: "PATCH",
+    });
+
+    if (!response.ok) {
+      setMessage("Project was not archived.");
+      return;
+    }
+
+    setMessage("Project archived.");
+    await loadProjects();
+  }
+
+  async function saveProjectUpdate(event, projectId) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/projects/${projectId}/updates`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(projectUpdatePayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Project update was not saved.");
+      return;
+    }
+
+    event.currentTarget.reset();
+    setMessage("Project update saved.");
+    await loadProjectUpdates(projectId);
   }
 
   async function saveReviewLaterResource(event) {
@@ -259,6 +351,9 @@ function App() {
         <label htmlFor="task-description">Description</label>
         <textarea id="task-description" name="description" rows="3" />
 
+        <label htmlFor="task-related-project">Related project id</label>
+        <input id="task-related-project" name="related_project_id" />
+
         <label htmlFor="task-waiting-on">Waiting on</label>
         <input id="task-waiting-on" name="waiting_on" />
 
@@ -303,6 +398,13 @@ function App() {
                   name="description"
                   rows="2"
                   defaultValue={task.description ?? ""}
+                />
+
+                <label htmlFor={`task-related-project-${task.id}`}>Related project id</label>
+                <input
+                  id={`task-related-project-${task.id}`}
+                  name="related_project_id"
+                  defaultValue={task.related_project_id ?? ""}
                 />
 
                 <label htmlFor={`waiting-on-${task.id}`}>Waiting on</label>
@@ -365,6 +467,9 @@ function App() {
 
         <label htmlFor="resource-why-it-matters">Why it matters</label>
         <textarea id="resource-why-it-matters" name="why_it_matters" rows="3" />
+
+        <label htmlFor="resource-related-project">Related project id</label>
+        <input id="resource-related-project" name="related_project_id" />
 
         <label htmlFor="resource-possible-use">Possible use</label>
         <input id="resource-possible-use" name="possible_use" />
@@ -465,11 +570,200 @@ function App() {
           ))}
         </ul>
       )}
+
+      <h1>Projects</h1>
+      <form onSubmit={saveProject}>
+        <label htmlFor="project-name">Name</label>
+        <input id="project-name" name="name" />
+
+        <label htmlFor="project-status">Status</label>
+        <select id="project-status" name="status" defaultValue="active">
+          {projectStatuses.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
+
+        <label htmlFor="project-current-phase">Current phase</label>
+        <input id="project-current-phase" name="current_phase" />
+
+        <label htmlFor="project-priority">Priority</label>
+        <input id="project-priority" name="priority" defaultValue="medium" />
+
+        <label htmlFor="project-source-of-truth">Source of truth</label>
+        <input id="project-source-of-truth" name="source_of_truth" />
+
+        <label htmlFor="project-last-completed-step">Last completed step</label>
+        <input id="project-last-completed-step" name="last_completed_step" />
+
+        <label htmlFor="project-current-blocker">Current blocker</label>
+        <input id="project-current-blocker" name="current_blocker" />
+
+        <label htmlFor="project-next-action">Next action</label>
+        <input id="project-next-action" name="next_action" />
+
+        <label htmlFor="project-waiting-on">Waiting on</label>
+        <input id="project-waiting-on" name="waiting_on" />
+
+        <label htmlFor="project-due-date">Due date</label>
+        <input id="project-due-date" name="due_date" type="date" />
+
+        <label htmlFor="project-active-reason">Active reason</label>
+        <input id="project-active-reason" name="active_reason" />
+
+        <button type="submit">Save Project</button>
+      </form>
+
+      <h2>Project List</h2>
+      {projects.length === 0 ? (
+        <p>No projects yet.</p>
+      ) : (
+        <ul>
+          {projects.map((project) => (
+            <li key={project.id}>
+              <form onSubmit={(event) => updateProject(event, project.id)}>
+                <label htmlFor={`project-name-${project.id}`}>Name</label>
+                <input
+                  id={`project-name-${project.id}`}
+                  name="name"
+                  defaultValue={project.name}
+                />
+
+                <label htmlFor={`project-status-${project.id}`}>Status</label>
+                <select
+                  id={`project-status-${project.id}`}
+                  name="status"
+                  defaultValue={project.status}
+                >
+                  {projectStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+
+                <label htmlFor={`project-current-phase-${project.id}`}>Current phase</label>
+                <input
+                  id={`project-current-phase-${project.id}`}
+                  name="current_phase"
+                  defaultValue={project.current_phase}
+                />
+
+                <label htmlFor={`project-priority-${project.id}`}>Priority</label>
+                <input
+                  id={`project-priority-${project.id}`}
+                  name="priority"
+                  defaultValue={project.priority}
+                />
+
+                <label htmlFor={`project-source-of-truth-${project.id}`}>Source of truth</label>
+                <input
+                  id={`project-source-of-truth-${project.id}`}
+                  name="source_of_truth"
+                  defaultValue={project.source_of_truth ?? ""}
+                />
+
+                <label htmlFor={`project-last-completed-step-${project.id}`}>
+                  Last completed step
+                </label>
+                <input
+                  id={`project-last-completed-step-${project.id}`}
+                  name="last_completed_step"
+                  defaultValue={project.last_completed_step ?? ""}
+                />
+
+                <label htmlFor={`project-current-blocker-${project.id}`}>Current blocker</label>
+                <input
+                  id={`project-current-blocker-${project.id}`}
+                  name="current_blocker"
+                  defaultValue={project.current_blocker ?? ""}
+                />
+
+                <label htmlFor={`project-next-action-${project.id}`}>Next action</label>
+                <input
+                  id={`project-next-action-${project.id}`}
+                  name="next_action"
+                  defaultValue={project.next_action ?? ""}
+                />
+
+                <label htmlFor={`project-waiting-on-${project.id}`}>Waiting on</label>
+                <input
+                  id={`project-waiting-on-${project.id}`}
+                  name="waiting_on"
+                  defaultValue={project.waiting_on ?? ""}
+                />
+
+                <label htmlFor={`project-due-date-${project.id}`}>Due date</label>
+                <input
+                  id={`project-due-date-${project.id}`}
+                  name="due_date"
+                  type="date"
+                  defaultValue={project.due_date ?? ""}
+                />
+
+                <p>Due soon: {project.due_soon ? "yes" : "no"}</p>
+
+                <label htmlFor={`project-active-reason-${project.id}`}>Active reason</label>
+                <input
+                  id={`project-active-reason-${project.id}`}
+                  name="active_reason"
+                  defaultValue={project.active_reason ?? ""}
+                />
+
+                <button type="submit">Update</button>
+                {project.status !== "archived" ? (
+                  <button type="button" onClick={() => archiveProject(project.id)}>
+                    Archive
+                  </button>
+                ) : null}
+              </form>
+
+              <form onSubmit={(event) => saveProjectUpdate(event, project.id)}>
+                <label htmlFor={`project-update-text-${project.id}`}>Project update</label>
+                <textarea
+                  id={`project-update-text-${project.id}`}
+                  name="update_text"
+                  rows="3"
+                />
+
+                <label htmlFor={`project-update-type-${project.id}`}>Update type</label>
+                <input
+                  id={`project-update-type-${project.id}`}
+                  name="update_type"
+                  defaultValue="progress"
+                />
+
+                <label htmlFor={`project-update-next-action-${project.id}`}>Next action</label>
+                <input id={`project-update-next-action-${project.id}`} name="next_action" />
+
+                <button type="submit">Add Update</button>
+              </form>
+
+              <h3>Project Updates</h3>
+              {(projectUpdates[project.id] ?? []).length === 0 ? (
+                <p>No updates yet.</p>
+              ) : (
+                <ul>
+                  {(projectUpdates[project.id] ?? []).map((update) => (
+                    <li key={update.id}>
+                      <p>{update.update_text}</p>
+                      <p>Type: {update.update_type}</p>
+                      {update.next_action ? <p>Next action: {update.next_action}</p> : null}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </main>
   );
 }
 
 const taskStatuses = ["open", "in_progress", "waiting", "blocked", "done", "archived"];
+const projectStatuses = ["active", "blocked", "waiting", "paused", "completed", "archived"];
 const reviewLaterStatuses = [
   "new",
   "reviewing",
@@ -486,6 +780,7 @@ function taskPayloadFromFormData(formData) {
     status: formData.get("status"),
     priority: formData.get("priority"),
     description: formData.get("description"),
+    related_project_id: formData.get("related_project_id"),
     waiting_on: formData.get("waiting_on"),
     follow_up_date: formData.get("follow_up_date"),
     last_contacted_at: formData.get("last_contacted_at"),
@@ -504,6 +799,30 @@ function reviewLaterPayloadFromFormData(formData) {
     possible_use: formData.get("possible_use"),
     notes: formData.get("notes"),
     tags: formData.get("tags"),
+  };
+}
+
+function projectPayloadFromFormData(formData) {
+  return {
+    name: formData.get("name"),
+    status: formData.get("status"),
+    current_phase: formData.get("current_phase"),
+    priority: formData.get("priority"),
+    source_of_truth: formData.get("source_of_truth"),
+    last_completed_step: formData.get("last_completed_step"),
+    current_blocker: formData.get("current_blocker"),
+    next_action: formData.get("next_action"),
+    waiting_on: formData.get("waiting_on"),
+    due_date: formData.get("due_date"),
+    active_reason: formData.get("active_reason"),
+  };
+}
+
+function projectUpdatePayloadFromFormData(formData) {
+  return {
+    update_text: formData.get("update_text"),
+    update_type: formData.get("update_type"),
+    next_action: formData.get("next_action"),
   };
 }
 

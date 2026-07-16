@@ -1,6 +1,7 @@
 import http from "node:http";
 import { getDatabase } from "./db.js";
 import { getHealthPayload } from "./health.js";
+import { handleProjectRequest } from "./projectHandlers.js";
 import { handleRawCaptureRequest } from "./rawCaptureHandlers.js";
 import { handleReviewLaterResourceRequest } from "./reviewLaterHandlers.js";
 import { handleTaskRequest } from "./taskHandlers.js";
@@ -23,6 +24,11 @@ const server = http.createServer(async (request, response) => {
 
     const reviewLaterHandled = await handleReviewLaterResourceRequest(request, response, database);
     if (reviewLaterHandled) {
+      return;
+    }
+
+    const projectHandled = await handleProjectRequest(request, response, database);
+    if (projectHandled) {
       return;
     }
   } catch (error) {

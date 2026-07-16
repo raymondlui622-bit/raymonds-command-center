@@ -18,7 +18,8 @@
 - Milestone 3 - Raw Capture Feature is complete.
 - Milestone 4 - Tasks and Waiting Tasks is complete.
 - Milestone 5 - Review Later Resources is complete.
-- Do not continue to Milestone 6 without explicit approval.
+- Milestone 6 - Projects and Project Updates is complete.
+- Do not continue to Milestone 7 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -35,7 +36,15 @@
 ## Milestone 5 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 5 Verification.md`.
 
-## Milestone 6 Pending Approval
+## Milestone 6 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 6 Verification.md`.
+
+## Milestone 7 Pending Approval
+- Search Foundation.
+- Add keyword search, tags, and filters for implemented modules only.
+- Do not add semantic search, vector database, Morning Brief, AI, exports, Arsenal, Prompt Library, or future module tables.
+
+## Completed Milestone 6 Scope
 - Projects and Project Updates.
 - Add Projects, append-only Project Updates, and current project state.
 - Do not add Search, Morning Brief, AI, exports, Arsenal, Prompt Library, or future module tables.
@@ -51,6 +60,8 @@
 - Return HTTP 400 for malformed JSON bodies instead of allowing JSON.parse errors to propagate when it naturally fits a future milestone.
 - After saving a capture, restore keyboard focus to the capture textarea when it naturally fits a future milestone.
 - Consider validating waiting-task fields in a future milestone, for example requiring `waiting_on` when `status = waiting`.
+- Handle malformed JSON consistently across every API endpoint with HTTP 400 responses when it naturally fits a future milestone.
+- Keep tags as a simple string until search requirements justify a more complex structure.
 
 ## Deferred Ideas
 These are future concepts, not approved Version 1 build scope:
@@ -74,7 +85,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 6 implementation
+- Milestone 7 implementation
 - Dashboard design
 - Future product modules
 - AI behavior
