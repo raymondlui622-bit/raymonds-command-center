@@ -139,3 +139,12 @@ Raymond approved Milestone 2 - Raw Capture Data Slice. The milestone must remain
 
 ### 2026-07-16 - Milestone 2 completed as a Raw Capture data slice only
 Milestone 2 added the `raw_captures` SQLite table, approved Raw Capture statuses, create/read data access functions, a fixture, and data-layer tests. No feature UI, backend routes, AI classification, exports, or future module tables were added.
+
+### 2026-07-16 - Milestone 3 approved to begin
+Raymond approved Milestone 3 - Raw Capture Feature. The milestone must remain limited to making Raw Capture usable, with no future milestone work, UI polish, AI, exports, or additional frameworks.
+
+### 2026-07-16 - Raw Capture required-string whitespace trimming deferred
+Raymond identified a minor backlog item to trim whitespace for required string fields before storing them. This should not be implemented unless it naturally fits a future milestone.
+
+### 2026-07-16 - Milestone 3 completed as the first usable Raw Capture module
+Milestone 3 added Raw Capture backend handlers and a minimal frontend view for adding, viewing, and archiving captures. Archived captures remain retrievable. No AI classification, exports, future module tables, or new dependencies were added.

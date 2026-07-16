@@ -32,3 +32,5 @@
 - Morning Brief items should be snapshots pointing back to sources, not a second place where tasks or projects live.
 - Milestone 2 confirmed that an idempotent table-specific migration is enough for the first data slice; a migration framework can be deferred until there is a real need.
 - Node SQLite query rows use a null-prototype object shape, so tests should assert the behavioral contract instead of overfitting to plain object identity.
+- A minimal HTTP handler layer is enough for the first usable feature; a backend routing framework remains unnecessary.
+- Raw Capture UI should stay plain until more modules exist, because polish now could accidentally become dashboard design.

@@ -72,6 +72,35 @@ export function getRawCaptureById(database, id) {
     .get(id) ?? null;
 }
 
+export function listRawCaptures(database) {
+  return database
+    .prepare(`
+      SELECT *
+      FROM raw_captures
+      ORDER BY captured_at DESC, id DESC
+    `)
+    .all();
+}
+
+export function archiveRawCapture(database, id, archivedAt = new Date().toISOString()) {
+  const existing = getRawCaptureById(database, id);
+
+  if (!existing) {
+    return null;
+  }
+
+  database
+    .prepare(`
+      UPDATE raw_captures
+      SET status = 'archived',
+          archived_at = ?
+      WHERE id = ?
+    `)
+    .run(archivedAt, id);
+
+  return getRawCaptureById(database, id);
+}
+
 function requireNonEmptyString(value, fieldName) {
   if (typeof value !== "string" || value.trim() === "") {
     throw new Error(`${fieldName} is required`);

@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 2 Complete.
+Phase 3 - Milestone 3 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -41,18 +41,24 @@ Phase 3 - Milestone 2 Complete.
 - Added Raw Capture fixture and data-layer tests.
 - Confirmed only the `raw_captures` table exists after database initialization.
 - Created `10_DELIVERABLES/Milestone 2 Verification.md`.
+- Raymond approved Milestone 3 - Raw Capture Feature.
+- Completed Milestone 3 - Raw Capture Feature.
+- Added Raw Capture backend handlers.
+- Added a minimal Raw Capture frontend view.
+- Added Raw Capture handler tests.
+- Confirmed captures can be added, viewed, archived, and retrieved after archive.
+- Created `10_DELIVERABLES/Milestone 3 Verification.md`.
 
 ## Not Started
-- Milestone 3 - Raw Capture Feature.
-- Feature UI implementation.
-- Raw Capture backend routes.
-- UI implementation.
-- API design.
+- Milestone 4 - Tasks and Waiting Tasks.
+- Task schema and data access.
+- Task backend handlers.
+- Task frontend view.
 - Integration planning.
 - Future module database tables.
 
 ## Current Blocker
-Milestone 3 is blocked until Raymond explicitly approves it to begin.
+Milestone 4 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 2 results. If approved, explicitly approve Milestone 3 - Raw Capture Feature.
+Review Milestone 3 results. If approved, explicitly approve Milestone 4 - Tasks and Waiting Tasks.

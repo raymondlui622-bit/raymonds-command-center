@@ -15,7 +15,8 @@
 - Phase 3 Implementation Plan is approved and frozen.
 - Milestone 1 - Local App Foundation is complete.
 - Milestone 2 - Raw Capture Data Slice is complete.
-- Do not continue to Milestone 3 without explicit approval.
+- Milestone 3 - Raw Capture Feature is complete.
+- Do not continue to Milestone 4 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -23,11 +24,17 @@
 ## Milestone 2 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 2 Verification.md`.
 
-## Milestone 3 Pending Approval
-- Raw Capture Feature.
-- Build the first functional module so Raymond can enter, view, and archive raw captures.
-- Do not add AI classification.
-- Do not add future module tables.
+## Milestone 3 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 3 Verification.md`.
+
+## Milestone 4 Pending Approval
+- Tasks and Waiting Tasks.
+- Add Tasks as the single action, reminder, waiting, and follow-up system.
+- Do not create a separate Follow-Up table or feature.
+- Do not add Review Later, Projects, Search, Morning Brief, AI, or exports.
+
+## Backlog
+- Trim whitespace for required string fields before storing them when it naturally fits a future milestone.
 
 ## Deferred Ideas
 These are future concepts, not approved Version 1 build scope:
@@ -51,10 +58,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 3 implementation
-- API planning
-- UI implementation
+- Milestone 4 implementation
 - Dashboard design
-- Feature UI
 - Future product modules
 - AI behavior

@@ -4,8 +4,10 @@ import { DatabaseSync } from "node:sqlite";
 import { initializeDatabase } from "./db.js";
 import {
   RAW_CAPTURE_STATUSES,
+  archiveRawCapture,
   createRawCapture,
   getRawCaptureById,
+  listRawCaptures,
 } from "./rawCaptures.js";
 import { rawCaptureFixture } from "./rawCaptures.fixture.js";
 
@@ -59,6 +61,27 @@ test("raw capture statuses match the approved model", () => {
         ),
       /Invalid raw capture status/,
     );
+  } finally {
+    database.close();
+  }
+});
+
+test("archives a raw capture while keeping it retrievable", () => {
+  const database = createTestDatabase();
+  try {
+    const created = createRawCapture(database, rawCaptureFixture());
+    const archived = archiveRawCapture(
+      database,
+      created.id,
+      "2026-07-16T11:00:00.000Z",
+    );
+    const stored = getRawCaptureById(database, created.id);
+    const listed = listRawCaptures(database);
+
+    assert.equal(archived.status, "archived");
+    assert.equal(archived.archived_at, "2026-07-16T11:00:00.000Z");
+    assert.equal(stored.raw_text, created.raw_text);
+    assert.equal(listed.some((capture) => capture.id === created.id), true);
   } finally {
     database.close();
   }
