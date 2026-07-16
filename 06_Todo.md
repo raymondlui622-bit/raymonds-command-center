@@ -17,7 +17,8 @@
 - Milestone 2 - Raw Capture Data Slice is complete.
 - Milestone 3 - Raw Capture Feature is complete.
 - Milestone 4 - Tasks and Waiting Tasks is complete.
-- Do not continue to Milestone 5 without explicit approval.
+- Milestone 5 - Review Later Resources is complete.
+- Do not continue to Milestone 6 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -31,7 +32,15 @@
 ## Milestone 4 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 4 Verification.md`.
 
-## Milestone 5 Pending Approval
+## Milestone 5 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 5 Verification.md`.
+
+## Milestone 6 Pending Approval
+- Projects and Project Updates.
+- Add Projects, append-only Project Updates, and current project state.
+- Do not add Search, Morning Brief, AI, exports, Arsenal, Prompt Library, or future module tables.
+
+## Completed Milestone 5 Scope
 - Review Later Resources.
 - Save resources with title, type, URL/location, and why it matters.
 - Do not add Projects, Search, Morning Brief, AI, or exports.
@@ -41,6 +50,7 @@
 - Trim whitespace for required string fields before storing them when it naturally fits a future milestone.
 - Return HTTP 400 for malformed JSON bodies instead of allowing JSON.parse errors to propagate when it naturally fits a future milestone.
 - After saving a capture, restore keyboard focus to the capture textarea when it naturally fits a future milestone.
+- Consider validating waiting-task fields in a future milestone, for example requiring `waiting_on` when `status = waiting`.
 
 ## Deferred Ideas
 These are future concepts, not approved Version 1 build scope:
@@ -64,7 +74,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 5 implementation
+- Milestone 6 implementation
 - Dashboard design
 - Future product modules
 - AI behavior

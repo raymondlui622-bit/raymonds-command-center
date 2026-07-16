@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 4 Complete.
+Phase 3 - Milestone 5 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -58,17 +58,30 @@ Phase 3 - Milestone 4 Complete.
 - Confirmed waiting tasks use `status = waiting` and approved waiting fields.
 - Confirmed no separate Follow-Up table or feature exists.
 - Created `10_DELIVERABLES/Milestone 4 Verification.md`.
+- Raymond approved Milestone 5 - Review Later Resources.
+- Completed Milestone 5 - Review Later Resources.
+- Added Review Later Resource schema initialization.
+- Added Review Later Resource backend data access functions.
+- Added Review Later Resource backend handlers.
+- Added a minimal Review Later frontend view.
+- Added Review Later fixtures, data-layer tests, and handler tests.
+- Confirmed resources can be saved with title, type, URL/location, and why it matters.
+- Confirmed Review Later statuses match the approved model.
+- Confirmed resources can store one primary project link for future Projects.
+- Confirmed archived resources remain retrievable.
+- Created `10_DELIVERABLES/Milestone 5 Verification.md`.
 
 ## Not Started
-- Milestone 5 - Review Later Resources.
-- Review Later schema and data access.
-- Review Later backend handlers.
-- Review Later frontend view.
+- Milestone 6 - Projects and Project Updates.
+- Project schema and data access.
+- Project Update schema and data access.
+- Project backend handlers.
+- Project frontend view.
 - Integration planning.
 - Future module database tables.
 
 ## Current Blocker
-Milestone 5 is blocked until Raymond explicitly approves it to begin.
+Milestone 6 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 4 results. If approved, explicitly approve Milestone 5 - Review Later Resources.
+Review Milestone 5 results. If approved, explicitly approve Milestone 6 - Projects and Project Updates.

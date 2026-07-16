@@ -36,3 +36,6 @@
 - Raw Capture UI should stay plain until more modules exist, because polish now could accidentally become dashboard design.
 - Task completion and archiving should update only their own status/timestamp fields so a state change cannot overwrite unrelated edits.
 - The no-separate-Follow-Up rule is easy to protect with a direct table-existence regression test.
+- Review Later fits the same simple module pattern as Tasks: migration, data access, handler, minimal view, and focused tests.
+- Future project links can be represented as nullable IDs before the Projects table exists, avoiding a premature foreign-key or relationship layer.
+- Milestone table-regression tests need to evolve as approved modules land, while still blocking unapproved future tables.

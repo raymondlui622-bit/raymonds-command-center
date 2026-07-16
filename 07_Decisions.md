@@ -157,3 +157,12 @@ Raymond identified three future backlog items: trim leading/trailing whitespace 
 
 ### 2026-07-16 - Milestone 4 completed with Tasks as the follow-up system
 Milestone 4 added the `tasks` SQLite table, approved Task statuses, waiting-task fields, task data access, task backend handlers, a minimal frontend view, and tests. Waiting and follow-up behavior is represented by Tasks with `status = waiting`; no separate Follow-Up table or feature was created.
+
+### 2026-07-16 - Milestone 5 approved to begin
+Raymond approved Milestone 5 - Review Later Resources. The milestone must remain limited to Review Later Resources, with no Projects, Search, Morning Brief, AI, exports, UI polish, additional frameworks, or future module work.
+
+### 2026-07-16 - Waiting-task validation deferred to backlog
+Raymond identified a future backlog item to consider validating waiting-task fields, such as requiring `waiting_on` when `status = waiting`. This should not be implemented until a later milestone naturally calls for it.
+
+### 2026-07-16 - Milestone 5 completed as the Review Later resource slice
+Milestone 5 added the `review_later_resources` SQLite table, approved Review Later statuses, resource data access, resource backend handlers, a minimal frontend view, and tests. Resources can preserve title, type, URL/location, why it matters, possible use, tags, notes, and one future primary project link. Archived resources remain retrievable.

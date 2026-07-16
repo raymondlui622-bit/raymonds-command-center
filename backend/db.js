@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 import { migrateRawCaptures } from "./migrations/rawCaptures.js";
+import { migrateReviewLaterResources } from "./migrations/reviewLaterResources.js";
 import { migrateTasks } from "./migrations/tasks.js";
 
 const rootDir = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -17,6 +18,7 @@ export function openDatabase(path = databasePath) {
 export function initializeDatabase(database) {
   migrateRawCaptures(database);
   migrateTasks(database);
+  migrateReviewLaterResources(database);
 }
 
 export function getDatabase(path = databasePath) {

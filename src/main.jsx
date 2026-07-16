@@ -8,6 +8,7 @@ function App() {
   const [rawText, setRawText] = useState("");
   const [captures, setCaptures] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [reviewLaterResources, setReviewLaterResources] = useState([]);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -22,6 +23,7 @@ function App() {
   useEffect(() => {
     loadCaptures();
     loadTasks();
+    loadReviewLaterResources();
   }, []);
 
   async function loadCaptures() {
@@ -34,6 +36,12 @@ function App() {
     const response = await fetch(`${apiBaseUrl}/tasks`);
     const data = await response.json();
     setTasks(data.tasks);
+  }
+
+  async function loadReviewLaterResources() {
+    const response = await fetch(`${apiBaseUrl}/review-later`);
+    const data = await response.json();
+    setReviewLaterResources(data.resources);
   }
 
   async function saveCapture(event) {
@@ -123,6 +131,61 @@ function App() {
 
     setMessage("Task archived.");
     await loadTasks();
+  }
+
+  async function saveReviewLaterResource(event) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/review-later`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reviewLaterPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Resource was not saved.");
+      return;
+    }
+
+    event.currentTarget.reset();
+    setMessage("Resource saved.");
+    await loadReviewLaterResources();
+  }
+
+  async function updateReviewLaterResource(event, id) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/review-later/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(reviewLaterPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Resource was not updated.");
+      return;
+    }
+
+    setMessage("Resource updated.");
+    await loadReviewLaterResources();
+  }
+
+  async function archiveReviewLaterResource(id) {
+    const response = await fetch(`${apiBaseUrl}/review-later/${id}/archive`, {
+      method: "PATCH",
+    });
+
+    if (!response.ok) {
+      setMessage("Resource was not archived.");
+      return;
+    }
+
+    setMessage("Resource archived.");
+    await loadReviewLaterResources();
   }
 
   async function archiveCapture(id) {
@@ -288,11 +351,134 @@ function App() {
           ))}
         </ul>
       )}
+
+      <h1>Review Later</h1>
+      <form onSubmit={saveReviewLaterResource}>
+        <label htmlFor="resource-title">Title</label>
+        <input id="resource-title" name="title" />
+
+        <label htmlFor="resource-type">Type</label>
+        <input id="resource-type" name="resource_type" />
+
+        <label htmlFor="resource-url-or-location">URL or location</label>
+        <input id="resource-url-or-location" name="url_or_location" />
+
+        <label htmlFor="resource-why-it-matters">Why it matters</label>
+        <textarea id="resource-why-it-matters" name="why_it_matters" rows="3" />
+
+        <label htmlFor="resource-possible-use">Possible use</label>
+        <input id="resource-possible-use" name="possible_use" />
+
+        <label htmlFor="resource-tags">Tags</label>
+        <input id="resource-tags" name="tags" />
+
+        <button type="submit">Save Resource</button>
+      </form>
+
+      <h2>Review Later List</h2>
+      {reviewLaterResources.length === 0 ? (
+        <p>No resources yet.</p>
+      ) : (
+        <ul>
+          {reviewLaterResources.map((resource) => (
+            <li key={resource.id}>
+              <form onSubmit={(event) => updateReviewLaterResource(event, resource.id)}>
+                <label htmlFor={`resource-title-${resource.id}`}>Title</label>
+                <input
+                  id={`resource-title-${resource.id}`}
+                  name="title"
+                  defaultValue={resource.title}
+                />
+
+                <label htmlFor={`resource-type-${resource.id}`}>Type</label>
+                <input
+                  id={`resource-type-${resource.id}`}
+                  name="resource_type"
+                  defaultValue={resource.resource_type}
+                />
+
+                <label htmlFor={`resource-status-${resource.id}`}>Status</label>
+                <select
+                  id={`resource-status-${resource.id}`}
+                  name="status"
+                  defaultValue={resource.status}
+                >
+                  {reviewLaterStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+
+                <label htmlFor={`resource-url-or-location-${resource.id}`}>URL or location</label>
+                <input
+                  id={`resource-url-or-location-${resource.id}`}
+                  name="url_or_location"
+                  defaultValue={resource.url_or_location ?? ""}
+                />
+
+                <label htmlFor={`resource-why-it-matters-${resource.id}`}>Why it matters</label>
+                <textarea
+                  id={`resource-why-it-matters-${resource.id}`}
+                  name="why_it_matters"
+                  rows="2"
+                  defaultValue={resource.why_it_matters}
+                />
+
+                <label htmlFor={`resource-related-project-${resource.id}`}>Related project id</label>
+                <input
+                  id={`resource-related-project-${resource.id}`}
+                  name="related_project_id"
+                  defaultValue={resource.related_project_id ?? ""}
+                />
+
+                <label htmlFor={`resource-possible-use-${resource.id}`}>Possible use</label>
+                <input
+                  id={`resource-possible-use-${resource.id}`}
+                  name="possible_use"
+                  defaultValue={resource.possible_use ?? ""}
+                />
+
+                <label htmlFor={`resource-notes-${resource.id}`}>Notes</label>
+                <textarea
+                  id={`resource-notes-${resource.id}`}
+                  name="notes"
+                  rows="2"
+                  defaultValue={resource.notes ?? ""}
+                />
+
+                <label htmlFor={`resource-tags-${resource.id}`}>Tags</label>
+                <input
+                  id={`resource-tags-${resource.id}`}
+                  name="tags"
+                  defaultValue={resource.tags ?? ""}
+                />
+
+                <button type="submit">Update</button>
+                {resource.status !== "archived" ? (
+                  <button type="button" onClick={() => archiveReviewLaterResource(resource.id)}>
+                    Archive
+                  </button>
+                ) : null}
+              </form>
+            </li>
+          ))}
+        </ul>
+      )}
     </main>
   );
 }
 
 const taskStatuses = ["open", "in_progress", "waiting", "blocked", "done", "archived"];
+const reviewLaterStatuses = [
+  "new",
+  "reviewing",
+  "useful",
+  "turned_into_task",
+  "reference",
+  "dismissed",
+  "archived",
+];
 
 function taskPayloadFromFormData(formData) {
   return {
@@ -304,6 +490,20 @@ function taskPayloadFromFormData(formData) {
     follow_up_date: formData.get("follow_up_date"),
     last_contacted_at: formData.get("last_contacted_at"),
     next_action: formData.get("next_action"),
+  };
+}
+
+function reviewLaterPayloadFromFormData(formData) {
+  return {
+    title: formData.get("title"),
+    resource_type: formData.get("resource_type"),
+    why_it_matters: formData.get("why_it_matters"),
+    status: formData.get("status") || undefined,
+    url_or_location: formData.get("url_or_location"),
+    related_project_id: formData.get("related_project_id"),
+    possible_use: formData.get("possible_use"),
+    notes: formData.get("notes"),
+    tags: formData.get("tags"),
   };
 }
 
