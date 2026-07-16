@@ -133,3 +133,9 @@ Milestone 1 created a minimal React frontend, local Node backend, health endpoin
 
 ### 2026-07-16 - Local git repository initialized
 The project folder did not already contain a git repository. A local git repository was initialized so milestones can satisfy the approved verification gate.
+
+### 2026-07-16 - Milestone 2 approved to begin
+Raymond approved Milestone 2 - Raw Capture Data Slice. The milestone must remain limited to Raw Capture schema, backend data access, fixtures, and data-layer tests.
+
+### 2026-07-16 - Milestone 2 completed as a Raw Capture data slice only
+Milestone 2 added the `raw_captures` SQLite table, approved Raw Capture statuses, create/read data access functions, a fixture, and data-layer tests. No feature UI, backend routes, AI classification, exports, or future module tables were added.

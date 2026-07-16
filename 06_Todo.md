@@ -14,15 +14,20 @@
 ## Phase 3 Implementation Planning Tasks
 - Phase 3 Implementation Plan is approved and frozen.
 - Milestone 1 - Local App Foundation is complete.
-- Do not continue to Milestone 2 without explicit approval.
+- Milestone 2 - Raw Capture Data Slice is complete.
+- Do not continue to Milestone 3 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
 
-## Milestone 2 Pending Approval
-- Raw Capture Data Slice.
-- Create only the Raw Capture database structure and backend data access needed for the next milestone.
-- Do not create all nine record types up front.
+## Milestone 2 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 2 Verification.md`.
+
+## Milestone 3 Pending Approval
+- Raw Capture Feature.
+- Build the first functional module so Raymond can enter, view, and archive raw captures.
+- Do not add AI classification.
+- Do not add future module tables.
 
 ## Deferred Ideas
 These are future concepts, not approved Version 1 build scope:
@@ -46,10 +51,10 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Database design
+- Milestone 3 implementation
 - API planning
 - UI implementation
 - Dashboard design
 - Feature UI
-- Product modules
+- Future product modules
 - AI behavior

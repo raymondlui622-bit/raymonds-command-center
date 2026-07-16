@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 1 Complete.
+Phase 3 - Milestone 2 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -34,18 +34,25 @@ Phase 3 - Milestone 1 Complete.
 - Added SQLite connection check.
 - Added local run instructions.
 - Created `10_DELIVERABLES/Milestone 1 Verification.md`.
+- Raymond approved Milestone 2 - Raw Capture Data Slice.
+- Completed Milestone 2 - Raw Capture Data Slice.
+- Added Raw Capture schema initialization.
+- Added Raw Capture backend data access functions.
+- Added Raw Capture fixture and data-layer tests.
+- Confirmed only the `raw_captures` table exists after database initialization.
+- Created `10_DELIVERABLES/Milestone 2 Verification.md`.
 
 ## Not Started
-- Milestone 2 - Raw Capture Data Slice.
-- Feature implementation.
-- Database migrations for product records.
+- Milestone 3 - Raw Capture Feature.
+- Feature UI implementation.
+- Raw Capture backend routes.
 - UI implementation.
 - API design.
 - Integration planning.
-- Application development.
+- Future module database tables.
 
 ## Current Blocker
-Milestone 2 is blocked until Raymond explicitly approves it to begin.
+Milestone 3 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 1 results. If approved, explicitly approve Milestone 2 - Raw Capture Data Slice.
+Review Milestone 2 results. If approved, explicitly approve Milestone 3 - Raw Capture Feature.

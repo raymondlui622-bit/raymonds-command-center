@@ -30,3 +30,5 @@
 - Node's built-in SQLite module is enough for the Milestone 1 connection check, avoiding an extra backend dependency.
 - Local server startup may require elevated permission in the managed sandbox even when binding only to localhost.
 - Morning Brief items should be snapshots pointing back to sources, not a second place where tasks or projects live.
+- Milestone 2 confirmed that an idempotent table-specific migration is enough for the first data slice; a migration framework can be deferred until there is a real need.
+- Node SQLite query rows use a null-prototype object shape, so tests should assert the behavioral contract instead of overfitting to plain object identity.
