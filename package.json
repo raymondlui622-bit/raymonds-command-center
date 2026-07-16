@@ -1,0 +1,17 @@
+{
+  "name": "raymond-command-center",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:frontend": "vite --host 127.0.0.1",
+    "dev:backend": "node --experimental-sqlite backend/server.js",
+    "test": "node --experimental-sqlite --test"
+  },
+  "dependencies": {
+    "vite": "^7.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {}
+}
