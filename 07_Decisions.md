@@ -175,3 +175,12 @@ Raymond identified future backlog items to handle malformed JSON consistently ac
 
 ### 2026-07-16 - Milestone 6 completed with append-only Project Updates
 Milestone 6 added the `projects` and `project_updates` SQLite tables, approved Project statuses, Project data access, Project Update append-only creation/listing, Project backend handlers, a minimal frontend view, and tests. `due_soon` is calculated rather than stored, `active_reason` is stored, and Tasks/Review Later resources can link to one primary project.
+
+### 2026-07-16 - Milestone 7 approved to begin
+Raymond approved Milestone 7 - Search Foundation. The milestone must remain limited to keyword search, tags, and filters for implemented modules only, with no semantic search, vector database, Morning Brief, AI, exports, Arsenal, Prompt Library, additional frameworks, or future module work.
+
+### 2026-07-16 - Project and API hardening refinements deferred
+Raymond identified future backlog items to keep `due_soon` calculated and never stored, add one future API-hardening milestone for consistent malformed JSON HTTP 400 responses, and preserve Project Updates as append-only history unless a future approved requirement explicitly changes that design.
+
+### 2026-07-16 - Milestone 7 completed with simple keyword search
+Milestone 7 added direct SQLite keyword search over existing Raw Captures, Tasks, Review Later Resources, Projects, and Project Updates, with status and related-project filters where applicable. No search tables, semantic search, vector database, AI, exports, or future module tables were added.

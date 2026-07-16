@@ -11,6 +11,7 @@ function App() {
   const [reviewLaterResources, setReviewLaterResources] = useState([]);
   const [projects, setProjects] = useState([]);
   const [projectUpdates, setProjectUpdates] = useState({});
+  const [searchResults, setSearchResults] = useState([]);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -58,6 +59,29 @@ function App() {
     const response = await fetch(`${apiBaseUrl}/projects/${projectId}/updates`);
     const data = await response.json();
     setProjectUpdates((current) => ({ ...current, [projectId]: data.updates }));
+  }
+
+  async function search(event) {
+    event.preventDefault();
+    setMessage("");
+
+    const params = new URLSearchParams();
+    const formData = new FormData(event.currentTarget);
+    for (const field of ["q", "status", "related_project_id", "record_type"]) {
+      const value = formData.get(field);
+      if (value) {
+        params.set(field, value);
+      }
+    }
+
+    const response = await fetch(`${apiBaseUrl}/search?${params.toString()}`);
+    if (!response.ok) {
+      setMessage("Search failed.");
+      return;
+    }
+
+    const data = await response.json();
+    setSearchResults(data.results);
   }
 
   async function saveCapture(event) {
@@ -296,6 +320,49 @@ function App() {
 
   return (
     <main>
+      <h1>Search</h1>
+      <form onSubmit={search}>
+        <label htmlFor="search-query">Keyword</label>
+        <input id="search-query" name="q" />
+
+        <label htmlFor="search-status">Status</label>
+        <input id="search-status" name="status" />
+
+        <label htmlFor="search-related-project">Related project id</label>
+        <input id="search-related-project" name="related_project_id" />
+
+        <label htmlFor="search-record-type">Record type</label>
+        <select id="search-record-type" name="record_type" defaultValue="">
+          <option value="">all</option>
+          {searchRecordTypes.map((recordType) => (
+            <option key={recordType} value={recordType}>
+              {recordType}
+            </option>
+          ))}
+        </select>
+
+        <button type="submit">Search</button>
+      </form>
+
+      <h2>Search Results</h2>
+      {searchResults.length === 0 ? (
+        <p>No search results.</p>
+      ) : (
+        <ul>
+          {searchResults.map((result) => (
+            <li key={`${result.record_type}-${result.id}`}>
+              <p>{result.record_type}</p>
+              <p>{result.title}</p>
+              <p>{result.summary}</p>
+              {result.status ? <p>Status: {result.status}</p> : null}
+              {result.related_project_id ? (
+                <p>Related project id: {result.related_project_id}</p>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <h1>Raw Capture</h1>
       <p>Backend: {health}</p>
 
@@ -764,6 +831,13 @@ function App() {
 
 const taskStatuses = ["open", "in_progress", "waiting", "blocked", "done", "archived"];
 const projectStatuses = ["active", "blocked", "waiting", "paused", "completed", "archived"];
+const searchRecordTypes = [
+  "raw_capture",
+  "task",
+  "review_later_resource",
+  "project",
+  "project_update",
+];
 const reviewLaterStatuses = [
   "new",
   "reviewing",

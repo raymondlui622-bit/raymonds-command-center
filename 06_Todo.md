@@ -19,7 +19,8 @@
 - Milestone 4 - Tasks and Waiting Tasks is complete.
 - Milestone 5 - Review Later Resources is complete.
 - Milestone 6 - Projects and Project Updates is complete.
-- Do not continue to Milestone 7 without explicit approval.
+- Milestone 7 - Search Foundation is complete.
+- Do not continue to Milestone 8 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -39,7 +40,15 @@
 ## Milestone 6 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 6 Verification.md`.
 
-## Milestone 7 Pending Approval
+## Milestone 7 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 7 Verification.md`.
+
+## Milestone 8 Pending Approval
+- Export and Portability.
+- Add Markdown and JSON exports for implemented core records.
+- Do not add Morning Brief, AI, Arsenal, Prompt Library, semantic search, vector database, or future module tables.
+
+## Completed Milestone 7 Scope
 - Search Foundation.
 - Add keyword search, tags, and filters for implemented modules only.
 - Do not add semantic search, vector database, Morning Brief, AI, exports, Arsenal, Prompt Library, or future module tables.
@@ -62,6 +71,9 @@
 - Consider validating waiting-task fields in a future milestone, for example requiring `waiting_on` when `status = waiting`.
 - Handle malformed JSON consistently across every API endpoint with HTTP 400 responses when it naturally fits a future milestone.
 - Keep tags as a simple string until search requirements justify a more complex structure.
+- Keep `due_soon` as a calculated field. Do not store it in the database.
+- Add one future API-hardening milestone to return HTTP 400 for malformed JSON consistently across all endpoints.
+- Preserve Project Updates as append-only history unless a future approved requirement explicitly changes that design.
 
 ## Deferred Ideas
 These are future concepts, not approved Version 1 build scope:
@@ -85,7 +97,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 7 implementation
+- Milestone 8 implementation
 - Dashboard design
 - Future product modules
 - AI behavior

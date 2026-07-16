@@ -42,3 +42,6 @@
 - Project Updates should have create/list/read-style behavior only; omitting update/delete paths is the simplest way to preserve append-only history.
 - Calculated fields like `due_soon` are safest when added to returned objects instead of persisted schema.
 - Project linking for Tasks and Review Later can stay as one nullable string field until a later milestone proves stricter relationship behavior is needed.
+- Milestone 7 did not need a search index table yet; direct keyword queries over the existing local SQLite tables were enough for the approved acceptance checks.
+- Search filters should respect the fields each record actually has. Project Updates have no status, so status-filtered searches should not pretend they do.
+- Keeping tags as a simple string keeps Review Later searchable without introducing taxonomy or tag-table maintenance too early.

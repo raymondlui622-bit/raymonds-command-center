@@ -4,6 +4,7 @@ import { getHealthPayload } from "./health.js";
 import { handleProjectRequest } from "./projectHandlers.js";
 import { handleRawCaptureRequest } from "./rawCaptureHandlers.js";
 import { handleReviewLaterResourceRequest } from "./reviewLaterHandlers.js";
+import { handleSearchRequest } from "./searchHandlers.js";
 import { handleTaskRequest } from "./taskHandlers.js";
 
 const host = "127.0.0.1";
@@ -37,6 +38,11 @@ const server = http.createServer(async (request, response) => {
       "Content-Type": "application/json",
     });
     response.end(JSON.stringify({ ok: false, error: error.message }));
+    return;
+  }
+
+  const searchHandled = await handleSearchRequest(request, response, database);
+  if (searchHandled) {
     return;
   }
 
