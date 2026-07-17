@@ -2,6 +2,10 @@
 
 Local-first foundation for the Raymond Command Center.
 
+## Version 1 Status
+
+Version 1.0.0 is complete and signed off (release commit `0c78c48`, 2026-07-17). All thirteen milestones passed QA, including the bundled live OpenAI smoke test. See [10_DELIVERABLES/VERSION_1_RELEASE_NOTES.md](10_DELIVERABLES/VERSION_1_RELEASE_NOTES.md) for capabilities, architecture, known limitations, and rollback instructions.
+
 ## Milestone 1 Commands
 
 Install dependencies:
