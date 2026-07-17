@@ -196,3 +196,12 @@ Raymond approved Milestone 9 - Minimal My Arsenal and Prompt Library as a narrow
 
 ### 2026-07-17 - Milestone 9 completed with reusable asset libraries
 Milestone 9 added My Arsenal and Prompt Library records with create, list, read, update, archive, and search support. Prompt Library also supports favorite/unfavorite and a frontend copy button that copies only `full_prompt`. No AI recommendations, auto-crawling, prompt execution, prompt versioning, prompt variables/templates, tool activation, external integrations, export changes, API hardening, new dependencies, or Milestone 10 behavior were added.
+
+### 2026-07-17 - Milestone 10 approved to begin
+Raymond approved Milestone 10 - AI-Assisted Classification as a narrow, review-first milestone. The approved flow starts from an existing Raw Capture, supports only Task and Review Later Resource suggestions, and requires Raymond approval before any record is created.
+
+### 2026-07-17 - No AI provider is approved or configured yet
+The approved project docs allow request-driven AI assistance but do not approve a concrete provider, model, SDK, or runtime credential. Milestone 10 therefore uses a small server-side provider boundary, deterministic mocked responses in tests, and a safe unavailable UI state in normal runtime.
+
+### 2026-07-17 - Milestone 10 completed as review-first classification only
+Milestone 10 added Classification Corrections, structured suggestion validation, minimal Raw Capture classification controls, and accept/reject/correction handlers. Accepted suggestions create exactly one Task or Review Later Resource using reviewed values and leave the original Raw Capture unchanged. No autonomous classification, external integration, SDK, export change, search redesign, API hardening, Morning Brief, Get Back on Track summary, or Milestone 11 work was added.

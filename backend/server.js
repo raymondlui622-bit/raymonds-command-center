@@ -1,5 +1,6 @@
 import http from "node:http";
 import { handleArsenalItemRequest } from "./arsenalHandlers.js";
+import { handleClassificationRequest } from "./classificationHandlers.js";
 import { getDatabase } from "./db.js";
 import { handleExportRequest } from "./exportHandlers.js";
 import { getHealthPayload } from "./health.js";
@@ -43,6 +44,11 @@ const server = http.createServer(async (request, response) => {
 
     const promptLibraryHandled = await handlePromptLibraryItemRequest(request, response, database);
     if (promptLibraryHandled) {
+      return;
+    }
+
+    const classificationHandled = await handleClassificationRequest(request, response, database);
+    if (classificationHandled) {
       return;
     }
   } catch (error) {

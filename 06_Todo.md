@@ -22,7 +22,8 @@
 - Milestone 7 - Search Foundation is complete.
 - Milestone 8 - Export and Portability is complete.
 - Milestone 9 - Minimal My Arsenal and Prompt Library is complete.
-- Do not continue to Milestone 10 without explicit approval.
+- Milestone 10 - AI-Assisted Classification is complete.
+- Do not continue to Milestone 11 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -51,10 +52,21 @@
 ## Milestone 9 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 9 Verification.md`.
 
-## Milestone 10 Pending Approval
+## Milestone 10 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 10 Verification.md`.
+
+## Milestone 11 Pending Approval
+- Get Back on Track Summaries.
+- Generate project resume summaries from internal project data only.
+- Do not add Morning Brief generation, external integrations, autonomous actions, export changes, or API-hardening backlog work.
+
+## Completed Milestone 10 Scope
 - AI-Assisted Classification.
-- Add request-driven AI suggestions for classification without autonomous action.
-- Do not add autonomous actions, integrations, Morning Brief automation, prompt execution, or API-hardening backlog work.
+- Added review-first Raw Capture classification suggestion flow for Task and Review Later Resource only.
+- Added Classification Corrections as historical feedback records.
+- Added safe unavailable runtime behavior because no AI provider/model has been approved or configured.
+- Tests use deterministic mocked provider responses.
+- Did not add autonomous classification, background/batch classification, Projects, Project Updates, Morning Brief generation, Get Back on Track summaries, external integrations, prompt execution, model training, embeddings, export changes, search redesign, API hardening, or Milestone 11 work.
 
 ## Completed Milestone 9 Scope
 - Minimal My Arsenal and Prompt Library.
@@ -115,7 +127,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 10 implementation
+- Milestone 11 implementation
 - Dashboard design
 - Future product modules
-- AI behavior
+- Additional AI behavior beyond approved Milestone 10 review-first classification

@@ -14,6 +14,7 @@ function App() {
   const [arsenalItems, setArsenalItems] = useState([]);
   const [promptLibraryItems, setPromptLibraryItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [classificationByCapture, setClassificationByCapture] = useState({});
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -465,6 +466,134 @@ function App() {
     await loadCaptures();
   }
 
+  async function requestClassification(captureId) {
+    setMessage("");
+    setClassificationByCapture((current) => ({
+      ...current,
+      [captureId]: { status: "loading" },
+    }));
+
+    const response = await fetch(`${apiBaseUrl}/raw-captures/${captureId}/classification-suggestion`, {
+      method: "POST",
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      setClassificationByCapture((current) => ({
+        ...current,
+        [captureId]: {
+          status: response.status === 503 ? "unavailable" : "error",
+          error: data.error ?? "classification_failed",
+        },
+      }));
+      return;
+    }
+
+    setClassificationByCapture((current) => ({
+      ...current,
+      [captureId]: { status: "suggested", suggestion: data.suggestion },
+    }));
+  }
+
+  async function acceptClassification(event, captureId, suggestion) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      acceptance_id: suggestion.acceptance_id,
+      proposed_record_type: suggestion.proposed_record_type,
+      values:
+        suggestion.proposed_record_type === "task"
+          ? taskClassificationPayloadFromFormData(formData)
+          : reviewLaterClassificationPayloadFromFormData(formData),
+    };
+
+    setClassificationByCapture((current) => ({
+      ...current,
+      [captureId]: { ...current[captureId], status: "accepting" },
+    }));
+
+    const response = await fetch(
+      `${apiBaseUrl}/raw-captures/${captureId}/classification-suggestion/accept`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+    const data = await response.json();
+
+    if (!response.ok) {
+      setClassificationByCapture((current) => ({
+        ...current,
+        [captureId]: { ...current[captureId], status: "suggested", error: "accept_failed" },
+      }));
+      return;
+    }
+
+    setClassificationByCapture((current) => ({
+      ...current,
+      [captureId]: {
+        ...current[captureId],
+        status: "accepted",
+        created: data.created,
+        record_type: data.record_type,
+      },
+    }));
+    setMessage(data.created ? "Classification accepted." : "Classification already accepted.");
+    await Promise.all([loadTasks(), loadReviewLaterResources()]);
+  }
+
+  async function rejectClassification(captureId) {
+    const response = await fetch(
+      `${apiBaseUrl}/raw-captures/${captureId}/classification-suggestion/reject`,
+      { method: "POST" },
+    );
+
+    if (!response.ok) {
+      setMessage("Classification was not rejected.");
+      return;
+    }
+
+    setClassificationByCapture((current) => ({
+      ...current,
+      [captureId]: { status: "rejected" },
+    }));
+    setMessage("Classification rejected.");
+  }
+
+  async function recordClassificationCorrection(event, captureId, suggestion) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const correctedRecordType = formData.get("corrected_record_type");
+    const correctedValues =
+      correctedRecordType === "task"
+        ? taskClassificationPayloadFromFormData(formData)
+        : reviewLaterClassificationPayloadFromFormData(formData);
+
+    const response = await fetch(`${apiBaseUrl}/raw-captures/${captureId}/classification-corrections`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        suggested_record_type: suggestion.proposed_record_type,
+        corrected_record_type: correctedRecordType,
+        original_suggestion: suggestion,
+        corrected_values: correctedValues,
+        correction_note: formData.get("correction_note"),
+      }),
+    });
+
+    if (!response.ok) {
+      setMessage("Correction was not recorded.");
+      return;
+    }
+
+    setMessage("Correction recorded.");
+  }
+
   return (
     <main>
       <h1>Search</h1>
@@ -547,6 +676,16 @@ function App() {
             <li key={capture.id}>
               <pre>{capture.raw_text}</pre>
               <p>Status: {capture.status}</p>
+              <button type="button" onClick={() => requestClassification(capture.id)}>
+                Request Classification
+              </button>
+              {renderClassificationPanel({
+                capture,
+                state: classificationByCapture[capture.id],
+                onAccept: acceptClassification,
+                onReject: rejectClassification,
+                onRecordCorrection: recordClassificationCorrection,
+              })}
               {capture.status !== "archived" ? (
                 <button type="button" onClick={() => archiveCapture(capture.id)}>
                   Archive
@@ -1191,6 +1330,155 @@ function App() {
   );
 }
 
+function renderClassificationPanel({
+  capture,
+  state,
+  onAccept,
+  onReject,
+  onRecordCorrection,
+}) {
+  if (!state) {
+    return null;
+  }
+
+  if (state.status === "loading") {
+    return <p>Requesting classification...</p>;
+  }
+
+  if (state.status === "unavailable") {
+    return <p>Classification provider is not configured.</p>;
+  }
+
+  if (state.status === "error") {
+    return <p>Classification suggestion failed safely.</p>;
+  }
+
+  if (state.status === "rejected") {
+    return <p>Suggestion rejected. The capture was not changed.</p>;
+  }
+
+  if (!state.suggestion) {
+    return null;
+  }
+
+  const suggestion = state.suggestion;
+  const isTask = suggestion.proposed_record_type === "task";
+
+  return (
+    <section>
+      <h3>Classification Suggestion</h3>
+      <p>Type: {suggestion.proposed_record_type}</p>
+      <p>Reason: {suggestion.reasoning}</p>
+      <p>Confidence: {String(suggestion.confidence)}</p>
+
+      <form onSubmit={(event) => onAccept(event, capture.id, suggestion)}>
+        {isTask ? (
+          <>
+            <label htmlFor={`classification-task-title-${capture.id}`}>Title</label>
+            <input
+              id={`classification-task-title-${capture.id}`}
+              name="title"
+              defaultValue={suggestion.values.title}
+            />
+
+            <label htmlFor={`classification-task-priority-${capture.id}`}>Priority</label>
+            <input
+              id={`classification-task-priority-${capture.id}`}
+              name="priority"
+              defaultValue={suggestion.values.priority ?? "medium"}
+            />
+
+          </>
+        ) : (
+          <>
+            <label htmlFor={`classification-resource-title-${capture.id}`}>Title</label>
+            <input
+              id={`classification-resource-title-${capture.id}`}
+              name="title"
+              defaultValue={suggestion.values.title}
+            />
+
+            <label htmlFor={`classification-resource-type-${capture.id}`}>Type</label>
+            <input
+              id={`classification-resource-type-${capture.id}`}
+              name="resource_type"
+              defaultValue={suggestion.values.resource_type}
+            />
+
+            <label htmlFor={`classification-resource-why-${capture.id}`}>Why it matters</label>
+            <textarea
+              id={`classification-resource-why-${capture.id}`}
+              name="why_it_matters"
+              rows="2"
+              defaultValue={suggestion.values.why_it_matters}
+            />
+
+          </>
+        )}
+
+        <button type="submit" disabled={state.status === "accepting" || state.status === "accepted"}>
+          Accept
+        </button>
+        <button type="button" onClick={() => onReject(capture.id)}>
+          Reject
+        </button>
+      </form>
+
+      {state.status === "accepted" ? (
+        <p>
+          Created {state.record_type}. The original capture was retained.
+        </p>
+      ) : null}
+
+      <form onSubmit={(event) => onRecordCorrection(event, capture.id, suggestion)}>
+        <label htmlFor={`classification-correct-type-${capture.id}`}>Corrected type</label>
+        <select
+          id={`classification-correct-type-${capture.id}`}
+          name="corrected_record_type"
+          defaultValue={suggestion.proposed_record_type}
+        >
+          <option value="task">task</option>
+          <option value="review_later_resource">review_later_resource</option>
+        </select>
+
+        <label htmlFor={`classification-correct-title-${capture.id}`}>Corrected title</label>
+        <input
+          id={`classification-correct-title-${capture.id}`}
+          name="title"
+          defaultValue={suggestion.values.title ?? ""}
+        />
+
+        <label htmlFor={`classification-correct-type-field-${capture.id}`}>Resource type</label>
+        <input
+          id={`classification-correct-type-field-${capture.id}`}
+          name="resource_type"
+          defaultValue={suggestion.values.resource_type ?? "note"}
+        />
+
+        <label htmlFor={`classification-correct-why-${capture.id}`}>Why it matters</label>
+        <textarea
+          id={`classification-correct-why-${capture.id}`}
+          name="why_it_matters"
+          rows="2"
+          defaultValue={suggestion.values.why_it_matters ?? suggestion.reasoning}
+        />
+
+        <label htmlFor={`classification-correct-priority-${capture.id}`}>Task priority</label>
+        <input
+          id={`classification-correct-priority-${capture.id}`}
+          name="priority"
+          defaultValue={suggestion.values.priority ?? "medium"}
+        />
+
+        <label htmlFor={`classification-correct-note-${capture.id}`}>Correction note</label>
+        <textarea id={`classification-correct-note-${capture.id}`} name="correction_note" rows="2" />
+
+        <button type="submit">Record Correction</button>
+      </form>
+    </section>
+  );
+}
+
 const taskStatuses = ["open", "in_progress", "waiting", "blocked", "done", "archived"];
 const projectStatuses = ["active", "blocked", "waiting", "paused", "completed", "archived"];
 const searchRecordTypes = [
@@ -1227,6 +1515,13 @@ function taskPayloadFromFormData(formData) {
   };
 }
 
+function taskClassificationPayloadFromFormData(formData) {
+  return {
+    title: formData.get("title"),
+    priority: formData.get("priority"),
+  };
+}
+
 function reviewLaterPayloadFromFormData(formData) {
   return {
     title: formData.get("title"),
@@ -1238,6 +1533,14 @@ function reviewLaterPayloadFromFormData(formData) {
     possible_use: formData.get("possible_use"),
     notes: formData.get("notes"),
     tags: formData.get("tags"),
+  };
+}
+
+function reviewLaterClassificationPayloadFromFormData(formData) {
+  return {
+    title: formData.get("title"),
+    resource_type: formData.get("resource_type"),
+    why_it_matters: formData.get("why_it_matters"),
   };
 }
 

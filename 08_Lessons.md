@@ -51,3 +51,6 @@
 - My Arsenal and Prompt Library can follow the same simple module pattern as earlier slices; no tag table, prompt versioning, or workflow abstraction is needed for basic reuse.
 - Favorite is clearer and safer as a boolean field than as another status because prompts still need normal lifecycle status.
 - Clipboard copy should be treated as a UI-only action that copies `full_prompt` and does not create records, execute prompts, or log prompt content.
+- When no AI provider has been approved, the safest implementation is a tiny provider boundary plus explicit unavailable state, not a fake classifier or premature SDK integration.
+- Review-first AI features should keep the source record immutable; create derived records only after Raymond accepts the reviewed values.
+- Duplicate-acceptance protection can stay simple by reusing a stable acceptance ID as the created record ID, avoiding another tracking table for Milestone 10.

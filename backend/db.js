@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 import { migrateArsenalItems } from "./migrations/arsenalItems.js";
+import { migrateClassificationCorrections } from "./migrations/classificationCorrections.js";
 import { migrateProjectUpdates } from "./migrations/projectUpdates.js";
 import { migrateProjects } from "./migrations/projects.js";
 import { migratePromptLibraryItems } from "./migrations/promptLibraryItems.js";
@@ -27,6 +28,7 @@ export function initializeDatabase(database) {
   migrateProjectUpdates(database);
   migrateArsenalItems(database);
   migratePromptLibraryItems(database);
+  migrateClassificationCorrections(database);
 }
 
 export function getDatabase(path = databasePath) {
