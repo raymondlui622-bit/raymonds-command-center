@@ -45,14 +45,23 @@ Exports include Raw Captures, Tasks, Review Later Resources, Projects, and Proje
 
 ## AI Classification Runtime
 
-Milestone 10 adds a small server-side classification provider boundary for Raw Capture suggestions.
+Milestone 10 adds a small server-side classification provider boundary for Raw Capture suggestions. Milestone 10.1 connects that boundary to OpenAI when server-side configuration is present.
 
-No AI provider, model, SDK, or API key has been approved or configured yet. In normal runtime, classification requests return a safe unavailable state until Raymond approves and configures a provider in a future step.
+Server-side configuration:
+
+```sh
+export OPENAI_API_KEY="..."
+export RCC_AI_CLASSIFICATION_MODEL="gpt-5-mini" # optional
+export RCC_AI_CLASSIFICATION_TIMEOUT_MS="15000" # optional
+npm run dev:backend
+```
 
 Current behavior:
 
 - The frontend can request classification from an existing Raw Capture.
-- The backend sends only the Raw Capture `id` and `raw_text` to the provider boundary.
-- With no provider configured, no data is sent outside the app and no record is created.
+- The backend sends only the selected Raw Capture text to OpenAI.
+- The backend attaches the local Raw Capture ID and a server-generated acceptance ID after validation.
+- With no API key configured, no data is sent outside the app and no record is created.
 - Tests use deterministic mocked provider responses; mocked responses are not treated as live AI functionality.
 - API keys must remain server-side and must not be committed to the project.
+- No OpenAI SDK is used; the backend uses native server-side `fetch`.

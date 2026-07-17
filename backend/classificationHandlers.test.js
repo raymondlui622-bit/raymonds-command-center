@@ -4,6 +4,7 @@ import { Readable } from "node:stream";
 import { DatabaseSync } from "node:sqlite";
 import { initializeDatabase } from "./db.js";
 import { handleClassificationRequest } from "./classificationHandlers.js";
+import { ClassificationProviderError } from "./classificationService.js";
 import { createRawCapture, getRawCaptureById } from "./rawCaptures.js";
 import { rawCaptureFixture } from "./rawCaptures.fixture.js";
 import { listReviewLaterResources } from "./reviewLaterResources.js";
@@ -125,6 +126,30 @@ test("classification handlers fail safely for malformed AI responses and unavail
     database.close();
   }
 });
+
+test("classification handlers return safe provider errors and create no records", async () => {
+  const database = createTestDatabase();
+  try {
+    const capture = createRawCapture(database, rawCaptureFixture({ id: "capture-provider-error" }));
+    const providerErrorResponse = await sendRequest(database, {
+      method: "POST",
+      url: `/raw-captures/${capture.id}/classification-suggestion`,
+      provider: {
+        async classifyRawCapture() {
+          throw new ClassificationProviderError();
+        },
+      },
+    });
+
+    assert.equal(providerErrorResponse.statusCode, 503);
+    assert.deepEqual(providerErrorResponse.body, { error: "classification_provider_error" });
+    assert.equal(listTasks(database).length, 0);
+    assert.equal(listReviewLaterResources(database).length, 0);
+  } finally {
+    database.close();
+  }
+});
+
 
 test("classification rejection creates no records and preserves the raw capture", async () => {
   const database = createTestDatabase();

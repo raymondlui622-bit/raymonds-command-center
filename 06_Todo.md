@@ -23,6 +23,7 @@
 - Milestone 8 - Export and Portability is complete.
 - Milestone 9 - Minimal My Arsenal and Prompt Library is complete.
 - Milestone 10 - AI-Assisted Classification is complete.
+- Milestone 10.1 - Live AI Provider Connection is complete.
 - Do not continue to Milestone 11 without explicit approval.
 
 ## Milestone 1 Verification Gate
@@ -55,6 +56,9 @@
 ## Milestone 10 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 10 Verification.md`.
 
+## Milestone 10.1 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 10.1 Verification.md`.
+
 ## Milestone 11 Pending Approval
 - Get Back on Track Summaries.
 - Generate project resume summaries from internal project data only.
@@ -67,6 +71,15 @@
 - Added safe unavailable runtime behavior because no AI provider/model has been approved or configured.
 - Tests use deterministic mocked provider responses.
 - Did not add autonomous classification, background/batch classification, Projects, Project Updates, Morning Brief generation, Get Back on Track summaries, external integrations, prompt execution, model training, embeddings, export changes, search redesign, API hardening, or Milestone 11 work.
+
+## Completed Milestone 10.1 Scope
+- Live AI Provider Connection.
+- Connected the existing provider boundary to OpenAI `gpt-5-mini` using native server-side `fetch`.
+- Uses Responses API strict Structured Outputs.
+- Sends only selected Raw Capture text externally.
+- Generates `acceptance_id` server-side and attaches trusted local `raw_capture_id` server-side after validation.
+- Keeps missing-key safe unavailable behavior.
+- Did not add SDK dependencies, multi-provider architecture, model-selection UI, autonomous/background/batch classification, embeddings, training, additional targets, Morning Brief work, Get Back on Track work, or unrelated refactoring.
 
 ## Completed Milestone 9 Scope
 - Minimal My Arsenal and Prompt Library.

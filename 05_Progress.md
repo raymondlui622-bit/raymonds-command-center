@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 10 Complete.
+Phase 3 - Milestone 10.1 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -123,6 +123,14 @@ Phase 3 - Milestone 10 Complete.
 - Confirmed accepted suggestions create exactly one Task or Review Later Resource and preserve the original Raw Capture.
 - Confirmed no autonomous classification, provider SDK, external integration, export change, search redesign, API-hardening work, or Milestone 11 work was added.
 - Created `10_DELIVERABLES/Milestone 10 Verification.md`.
+- Raymond approved Milestone 10.1 - Live AI Provider Connection.
+- Completed Milestone 10.1 as a narrow OpenAI live-provider connection.
+- Connected the existing classification provider boundary to OpenAI `gpt-5-mini` through the Responses API with strict Structured Outputs and native server-side `fetch`.
+- Confirmed the external provider request sends only selected Raw Capture text, not database IDs, acceptance IDs, timestamps, statuses, archive state, or unrelated records.
+- Confirmed the backend generates `acceptance_id` and attaches the trusted local `raw_capture_id` after application validation.
+- Preserved missing-key unavailable behavior, review-first approval, duplicate-acceptance protection, historical-only corrections, and unchanged Raw Captures.
+- Confirmed no SDK, dependencies, provider switching UI, autonomous/background classification, new targets, embeddings, training, Milestone 11, or Milestone 12 work was added.
+- Created `10_DELIVERABLES/Milestone 10.1 Verification.md`.
 
 ## Not Started
 - Milestone 11 - Get Back on Track Summaries.
@@ -133,4 +141,4 @@ Phase 3 - Milestone 10 Complete.
 Milestone 11 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 10 results. If approved, explicitly approve Milestone 11 - Get Back on Track Summaries.
+Review Milestone 10.1 results. If approved, explicitly approve Milestone 11 - Get Back on Track Summaries.

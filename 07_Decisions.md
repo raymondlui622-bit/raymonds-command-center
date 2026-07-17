@@ -205,3 +205,12 @@ The approved project docs allow request-driven AI assistance but do not approve 
 
 ### 2026-07-17 - Milestone 10 completed as review-first classification only
 Milestone 10 added Classification Corrections, structured suggestion validation, minimal Raw Capture classification controls, and accept/reject/correction handlers. Accepted suggestions create exactly one Task or Review Later Resource using reviewed values and leave the original Raw Capture unchanged. No autonomous classification, external integration, SDK, export change, search redesign, API hardening, Morning Brief, Get Back on Track summary, or Milestone 11 work was added.
+
+### 2026-07-17 - Milestone 10.1 approved to begin
+Raymond approved Milestone 10.1 - Live AI Provider Connection using OpenAI `gpt-5-mini`, the Responses API, strict Structured Outputs, native server-side `fetch`, and no SDK or new dependencies.
+
+### 2026-07-17 - Milestone 10.1 sends only Raw Capture text externally
+The live provider request sends only the selected Raw Capture text to OpenAI. Database IDs, `raw_capture_id`, `acceptance_id`, timestamps, statuses, archive state, and unrelated internal records remain local. The backend generates `acceptance_id` and attaches the trusted local `raw_capture_id` after local validation.
+
+### 2026-07-17 - Milestone 10.1 completed without changing review-first protections
+Milestone 10.1 connected the provider boundary to OpenAI while preserving manual request, review-before-create, edit-before-accept, rejection no-op, duplicate acceptance protection, unchanged Raw Captures, historical-only corrections, and safe unavailable behavior when `OPENAI_API_KEY` is missing.

@@ -3,6 +3,7 @@ import {
   listClassificationCorrections,
 } from "./classificationCorrections.js";
 import {
+  ClassificationProviderError,
   ClassificationProviderUnavailableError,
   normalizeAcceptedClassification,
   requestClassificationSuggestion,
@@ -73,6 +74,10 @@ export async function handleClassificationRequest(
     } catch (error) {
       if (error instanceof ClassificationProviderUnavailableError) {
         writeJson(response, 503, { error: "classification_provider_unavailable" });
+        return true;
+      }
+      if (error instanceof ClassificationProviderError) {
+        writeJson(response, 503, { error: "classification_provider_error" });
         return true;
       }
       writeJson(response, 422, { error: "classification_suggestion_invalid" });

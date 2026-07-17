@@ -54,3 +54,6 @@
 - When no AI provider has been approved, the safest implementation is a tiny provider boundary plus explicit unavailable state, not a fake classifier or premature SDK integration.
 - Review-first AI features should keep the source record immutable; create derived records only after Raymond accepts the reviewed values.
 - Duplicate-acceptance protection can stay simple by reusing a stable acceptance ID as the created record ID, avoiding another tracking table for Milestone 10.
+- A live provider connection can stay dependency-free when the API call is a single server-side JSON request; native `fetch` preserves the local app's simple architecture.
+- Provider output should be treated as untrusted even with strict Structured Outputs; local validation should still generate IDs and attach trusted local context.
+- Sending only the minimum selected text preserves the Version 1 privacy boundary better than passing database IDs or surrounding operational records.
