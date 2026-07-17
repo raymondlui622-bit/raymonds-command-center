@@ -82,7 +82,8 @@ function buildNarrativeRequest(bundle, model) {
         }),
       },
     ],
-    max_output_tokens: 300,
+    // M13-003: gpt-5-mini reasoning tokens count against this budget; 300 starved the output.
+    max_output_tokens: 500,
     text: {
       format: {
         type: "json_schema",

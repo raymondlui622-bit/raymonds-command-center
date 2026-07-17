@@ -1,6 +1,6 @@
 # Milestone 13 Verification - Version 1 Stabilization and QA
 
-Status: In progress
+Status: Paused for Raymond review
 Date: 2026-07-17
 
 ## Approved Scope
@@ -16,24 +16,24 @@ No new features, record types, integrations, scheduling, notifications, UI redes
 - Git commit created: Pending.
 - Rollback instructions verified: Pending.
 - Short implementation summary: Pending.
-- Recommendation to proceed or stop: Stop for Raymond review of M13-001 before any application fix.
+- Recommendation to proceed or stop: Stop for Raymond review of the M13-003 fix diff before commit. After commit, M13-003 can be closed and the final Version 1 decision made.
 
 ## Required QA Evidence
-- Full regression suite: Pending.
-- `git diff --check`: Pending.
-- Browser UI click-through for Milestones 11 and 12: Pending.
-- Bundled live OpenAI smoke test for Milestones 10.1, 11, and 12: Pending.
-- No-key fallback verification: Pending.
-- Database backup and restore: Pending.
-- Fresh database initialization: Pending.
-- Existing database upgrade/idempotency: Pending.
-- Export integrity: Pending.
-- Source-record no-mutation: Pending.
-- Security and secret-exposure checks: Pending.
-- Performance and responsiveness checks: Pending.
+- Full regression suite: Passed, 100/100 after live smoke test.
+- `git diff --check`: Passed after live smoke test.
+- Browser UI click-through for Milestones 11 and 12: Passed for no-key states (see QA Report).
+- Bundled live OpenAI smoke test for Milestones 10.1, 11, and 12: Ran 2026-07-17. Milestone 10.1 passed, Milestone 12 passed, Milestone 11 failed with Critical defect M13-003, then passed on live re-test after the approved fix.
+- No-key fallback verification: Passed.
+- Database backup and restore: Passed; QA data removed by restoring the verified pre-QA backup, checksum matched, integrity `ok`.
+- Fresh database initialization: Passed.
+- Existing database upgrade/idempotency: Passed.
+- Export integrity: Passed after M13-001 fix.
+- Source-record no-mutation: Passed, including live-key checks.
+- Security and secret-exposure checks: Passed for live smoke scope; key never printed, stored, or logged, and never reached the browser, logs, or database.
+- Performance and responsiveness checks: Live AI responses completed in 4.7-6.3 seconds; local CRUD responses were immediate.
 
 ## Version 1 Release Decision
-Pending. QA is paused because M13-001 is currently classified as a Critical Version 1 release blocker unless Raymond explicitly accepts the export coverage gap as deferred.
+Pending. QA is paused for Raymond review of Critical defect M13-003. No final PASS or FAIL has been issued.
 
 The final decision must be exactly one of:
 

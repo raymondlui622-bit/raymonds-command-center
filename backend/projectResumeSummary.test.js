@@ -101,6 +101,8 @@ test("narrative sends only the selected project's fields, tasks, and updates", a
   });
 
   const bodyText = JSON.stringify(requests[0].body);
+  // M13-003 regression: budget below 500 starves gpt-5-mini reasoning output.
+  assert.equal(requests[0].body.max_output_tokens, 500);
   assert.equal(result.narrative_status, "available");
   assert.equal(result.narrative, "Pick up the electrician follow-up next.");
   assert.equal(bodyText.includes("Command Center"), true);
