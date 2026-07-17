@@ -11,10 +11,24 @@ import {
   PromptLibrarySection,
   ProjectsSection,
 } from "./sections.jsx";
+import { Card } from "./ui.jsx";
 
 const apiBaseUrl = "http://127.0.0.1:3001";
 
+const navItems = [
+  { id: "morning-brief", label: "Morning Brief" },
+  { id: "search", label: "Search" },
+  { id: "export", label: "Export" },
+  { id: "raw-capture", label: "Raw Capture" },
+  { id: "tasks", label: "Tasks" },
+  { id: "review-later", label: "Review Later" },
+  { id: "arsenal", label: "My Arsenal" },
+  { id: "prompt-library", label: "Prompt Library" },
+  { id: "projects", label: "Projects" },
+];
+
 function App() {
+  const [activeSection, setActiveSection] = useState("morning-brief");
   const [health, setHealth] = useState("checking");
   const [rawText, setRawText] = useState("");
   const [captures, setCaptures] = useState([]);
@@ -685,7 +699,27 @@ function App() {
   }
 
   return (
-    <main>
+    <div className="app-shell">
+      <nav className="app-nav">
+        <Card>
+          <ul>
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => setActiveSection(item.id)}
+                  aria-current={activeSection === item.id ? "page" : undefined}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </nav>
+
+      <main className="app-main">
+      {activeSection === "morning-brief" ? (
       <MorningBriefSection
         morningBrief={morningBrief}
         morningBriefStatus={morningBriefStatus}
@@ -694,11 +728,17 @@ function App() {
         onToggleShowAllRequiresRaymond={() => setShowAllRequiresRaymond((current) => !current)}
         onReviewItem={reviewMorningBriefItem}
       />
+      ) : null}
 
+      {activeSection === "search" ? (
       <SearchSection onSearch={search} searchResults={searchResults} />
+      ) : null}
 
+      {activeSection === "export" ? (
       <ExportSection apiBaseUrl={apiBaseUrl} />
+      ) : null}
 
+      {activeSection === "raw-capture" ? (
       <RawCaptureSection
         health={health}
         rawText={rawText}
@@ -713,7 +753,9 @@ function App() {
         onRecordClassificationCorrection={recordClassificationCorrection}
         onArchiveCapture={archiveCapture}
       />
+      ) : null}
 
+      {activeSection === "tasks" ? (
       <TasksSection
         tasks={tasks}
         onSaveTask={saveTask}
@@ -721,21 +763,27 @@ function App() {
         onCompleteTask={completeTask}
         onArchiveTask={archiveTask}
       />
+      ) : null}
 
+      {activeSection === "review-later" ? (
       <ReviewLaterSection
         reviewLaterResources={reviewLaterResources}
         onSaveReviewLaterResource={saveReviewLaterResource}
         onUpdateReviewLaterResource={updateReviewLaterResource}
         onArchiveReviewLaterResource={archiveReviewLaterResource}
       />
+      ) : null}
 
+      {activeSection === "arsenal" ? (
       <ArsenalSection
         arsenalItems={arsenalItems}
         onSaveArsenalItem={saveArsenalItem}
         onUpdateArsenalItem={updateArsenalItem}
         onArchiveArsenalItem={archiveArsenalItem}
       />
+      ) : null}
 
+      {activeSection === "prompt-library" ? (
       <PromptLibrarySection
         promptLibraryItems={promptLibraryItems}
         onSavePromptLibraryItem={savePromptLibraryItem}
@@ -744,7 +792,9 @@ function App() {
         onSetPromptFavorite={setPromptFavorite}
         onArchivePromptLibraryItem={archivePromptLibraryItem}
       />
+      ) : null}
 
+      {activeSection === "projects" ? (
       <ProjectsSection
         projects={projects}
         onSaveProject={saveProject}
@@ -755,7 +805,9 @@ function App() {
         resumeSummaryByProject={resumeSummaryByProject}
         projectUpdates={projectUpdates}
       />
-    </main>
+      ) : null}
+      </main>
+    </div>
   );
 }
 
