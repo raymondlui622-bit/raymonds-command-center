@@ -89,6 +89,18 @@ export function listTasks(database) {
     .all();
 }
 
+export function listTasksForProject(database, projectId, statuses) {
+  const placeholders = statuses.map(() => "?").join(",");
+  return database
+    .prepare(`
+      SELECT *
+      FROM tasks
+      WHERE related_project_id = ? AND status IN (${placeholders})
+      ORDER BY created_at DESC, id DESC
+    `)
+    .all(projectId, ...statuses);
+}
+
 export function updateTask(database, id, input) {
   const existing = getTaskById(database, id);
   if (!existing) {

@@ -19,20 +19,71 @@ export class ClassificationProviderError extends Error {
   }
 }
 
-export function getRuntimeClassificationProvider() {
+export function getRuntimeOpenAIConfig() {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return null;
   }
 
-  return createOpenAIClassificationProvider({
+  return {
     apiKey,
     model: process.env.RCC_AI_CLASSIFICATION_MODEL ?? defaultOpenAIModel,
     timeoutMs: Number.parseInt(
       process.env.RCC_AI_CLASSIFICATION_TIMEOUT_MS ?? `${defaultOpenAITimeoutMs}`,
       10,
     ),
-  });
+  };
+}
+
+export function getRuntimeClassificationProvider() {
+  const config = getRuntimeOpenAIConfig();
+  if (!config) {
+    return null;
+  }
+
+  return createOpenAIClassificationProvider(config);
+}
+
+export async function callOpenAIResponsesApi({
+  apiKey,
+  model,
+  timeoutMs = defaultOpenAITimeoutMs,
+  fetchImpl = fetch,
+  requestBody,
+}) {
+  const requestTimeoutMs = Number.isFinite(timeoutMs) && timeoutMs > 0
+    ? timeoutMs
+    : defaultOpenAITimeoutMs;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
+
+  let response;
+  try {
+    response = await fetchImpl(openAIResponsesUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+      signal: controller.signal,
+    });
+  } catch {
+    throw new ClassificationProviderError();
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  if (!response.ok) {
+    throw new ClassificationProviderError();
+  }
+
+  try {
+    return await response.json();
+  } catch {
+    throw new ClassificationProviderError();
+  }
 }
 
 export function createOpenAIClassificationProvider({
@@ -45,42 +96,15 @@ export function createOpenAIClassificationProvider({
     throw new ClassificationProviderUnavailableError();
   }
 
-  const requestTimeoutMs = Number.isFinite(timeoutMs) && timeoutMs > 0
-    ? timeoutMs
-    : defaultOpenAITimeoutMs;
-
   return {
     async classifyRawCapture(input) {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
-
-      let response;
-      try {
-        response = await fetchImpl(openAIResponsesUrl, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(buildOpenAIClassificationRequest(input.raw_text, model)),
-          signal: controller.signal,
-        });
-      } catch (error) {
-        throw new ClassificationProviderError();
-      } finally {
-        clearTimeout(timeout);
-      }
-
-      if (!response.ok) {
-        throw new ClassificationProviderError();
-      }
-
-      let payload;
-      try {
-        payload = await response.json();
-      } catch {
-        throw new ClassificationProviderError();
-      }
+      const payload = await callOpenAIResponsesApi({
+        apiKey,
+        model,
+        timeoutMs,
+        fetchImpl,
+        requestBody: buildOpenAIClassificationRequest(input.raw_text, model),
+      });
 
       return parseOpenAIClassificationResponse(payload);
     },
@@ -271,7 +295,7 @@ function parseOpenAIClassificationResponse(payload) {
   return JSON.parse(outputText);
 }
 
-function extractOpenAIOutputText(payload) {
+export function extractOpenAIOutputText(payload) {
   if (typeof payload?.output_text === "string") {
     return payload.output_text;
   }

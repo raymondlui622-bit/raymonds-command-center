@@ -23,8 +23,9 @@
 - Milestone 8 - Export and Portability is complete.
 - Milestone 9 - Minimal My Arsenal and Prompt Library is complete.
 - Milestone 10 - AI-Assisted Classification is complete.
-- Milestone 10.1 - Live AI Provider Connection is complete.
-- Do not continue to Milestone 11 without explicit approval.
+- Milestone 10.1 - Live AI Provider Connection is complete (live OpenAI verification deferred).
+- Milestone 11 - Get Back on Track Summaries is complete.
+- Do not continue to Milestone 12 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -57,12 +58,14 @@
 - Completed. See `10_DELIVERABLES/Milestone 10 Verification.md`.
 
 ## Milestone 10.1 Verification Gate
-- Completed. See `10_DELIVERABLES/Milestone 10.1 Verification.md`.
+- Completed. See `10_DELIVERABLES/Milestone 10.1 Verification.md`. Live OpenAI verification deferred to a bundled Version 1 smoke test.
 
-## Milestone 11 Pending Approval
-- Get Back on Track Summaries.
-- Generate project resume summaries from internal project data only.
-- Do not add Morning Brief generation, external integrations, autonomous actions, export changes, or API-hardening backlog work.
+## Milestone 11 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 11 Verification.md`. Live OpenAI narrative verification deferred to the same bundled Version 1 smoke test.
+
+## Milestone 12 Pending Approval
+- Read-Only AI-Assisted Morning Brief.
+- Do not begin without explicit approval.
 
 ## Completed Milestone 10 Scope
 - AI-Assisted Classification.
@@ -71,6 +74,13 @@
 - Added safe unavailable runtime behavior because no AI provider/model has been approved or configured.
 - Tests use deterministic mocked provider responses.
 - Did not add autonomous classification, background/batch classification, Projects, Project Updates, Morning Brief generation, Get Back on Track summaries, external integrations, prompt execution, model training, embeddings, export changes, search redesign, API hardening, or Milestone 11 work.
+
+## Completed Milestone 11 Scope
+- Get Back on Track Summaries.
+- Added `POST /projects/:id/resume-summary`: deterministic project fields, linked open tasks, linked waiting tasks, and latest three project updates, always available with no API key.
+- Added an optional AI narrative on the same response, reusing the Milestone 10.1 OpenAI provider plumbing, request-driven and never stored.
+- Rejected completed and archived projects with no provider call and no mutation.
+- Did not add Milestone 12 Morning Brief work, caching/persistence of narratives, multi-provider support, new dependencies, or cross-project ranking.
 
 ## Completed Milestone 10.1 Scope
 - Live AI Provider Connection.

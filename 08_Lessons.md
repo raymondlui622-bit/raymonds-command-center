@@ -57,3 +57,6 @@
 - A live provider connection can stay dependency-free when the API call is a single server-side JSON request; native `fetch` preserves the local app's simple architecture.
 - Provider output should be treated as untrusted even with strict Structured Outputs; local validation should still generate IDs and attach trusted local context.
 - Sending only the minimum selected text preserves the Version 1 privacy boundary better than passing database IDs or surrounding operational records.
+- A second AI-assisted feature can reuse an existing provider's fetch/timeout/error plumbing without duplicating it; extracting only the generic HTTP-call logic (not the feature-specific schema/prompt) keeps the reuse honest and the original feature's tests passing unchanged.
+- "Generated on request, refreshed manually" is best implemented as a POST that always assembles fresh deterministic data and never persists AI output - no cache, no stored timestamp, nothing to go stale or leak between requests.
+- Reading through the frozen implementation plan before writing a proposal catches scope the immediate conversation missed - Milestone 11's Task/waiting-Task inputs were specified in `Phase 3 Implementation Plan.md` but absent from the first draft proposal.

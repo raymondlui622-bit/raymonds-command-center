@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 10.1 Complete.
+Phase 3 - Milestone 11 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -131,14 +131,24 @@ Phase 3 - Milestone 10.1 Complete.
 - Preserved missing-key unavailable behavior, review-first approval, duplicate-acceptance protection, historical-only corrections, and unchanged Raw Captures.
 - Confirmed no SDK, dependencies, provider switching UI, autonomous/background classification, new targets, embeddings, training, Milestone 11, or Milestone 12 work was added.
 - Created `10_DELIVERABLES/Milestone 10.1 Verification.md`.
+- Raymond deferred live OpenAI verification until Version 1 API billing is enabled; Milestone 10.1 recorded as code-complete, mocked-tested, live-pending.
+- Raymond approved Milestone 11 - Get Back on Track Summaries via `10_DELIVERABLES/Milestone 11 Proposal.md`.
+- Completed Milestone 11 as one milestone covering both the deterministic summary and the optional AI narrative.
+- Added `POST /projects/:id/resume-summary`: always returns project fields, linked open tasks, linked waiting tasks, and the latest three project updates from trusted SQLite data.
+- Added an optional AI narrative on the same response when `OPENAI_API_KEY` is configured, reusing the Milestone 10.1 OpenAI provider plumbing (`callOpenAIResponsesApi`, `getRuntimeOpenAIConfig`, extracted from `classificationService.js` without changing Milestone 10.1 behavior).
+- Confirmed the endpoint rejects completed and archived projects (409) without calling the provider, and confirmed no database mutation occurs under any response path.
+- Confirmed the narrative sends only the selected project's fields, its linked tasks, and its latest updates - no other project, no Raw Captures, Review Later, Arsenal, Prompt Library, corrections, or internal IDs.
+- Added a minimal Get Back on Track section to the existing project list UI with a manual refresh action.
+- Confirmed no dependencies added and full regression suite passes (`npm test`).
+- Created `10_DELIVERABLES/Milestone 11 Proposal.md` and `10_DELIVERABLES/Milestone 11 Verification.md`.
 
 ## Not Started
-- Milestone 11 - Get Back on Track Summaries.
+- Milestone 12 - Read-Only AI-Assisted Morning Brief.
 - Integration planning.
 - Future module database tables.
 
 ## Current Blocker
-Milestone 11 is blocked until Raymond explicitly approves it to begin.
+Milestone 12 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 10.1 results. If approved, explicitly approve Milestone 11 - Get Back on Track Summaries.
+Review Milestone 11 results. If approved, explicitly approve Milestone 12 - Read-Only AI-Assisted Morning Brief. Live OpenAI verification for Milestone 10.1 and Milestone 11 remains bundled into one smoke test near the end of Version 1.

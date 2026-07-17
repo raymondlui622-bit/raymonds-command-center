@@ -214,3 +214,12 @@ The live provider request sends only the selected Raw Capture text to OpenAI. Da
 
 ### 2026-07-17 - Milestone 10.1 completed without changing review-first protections
 Milestone 10.1 connected the provider boundary to OpenAI while preserving manual request, review-before-create, edit-before-accept, rejection no-op, duplicate acceptance protection, unchanged Raw Captures, historical-only corrections, and safe unavailable behavior when `OPENAI_API_KEY` is missing.
+
+### 2026-07-17 - Live OpenAI verification deferred to end of Version 1
+Raymond considered switching Version 1's provider from OpenAI to Anthropic mid-session, then reversed that direction and confirmed staying on OpenAI. He chose to defer live OpenAI verification and API billing until Version 1 is otherwise complete, rather than enabling billing now. Milestone 10.1 is recorded as code-complete with mocked provider tests passing; live verification is pending and will be run as one bundled smoke test near the end of Version 1 covering Milestone 10.1, Milestone 11, and Milestone 12 together.
+
+### 2026-07-17 - Milestone 11 approved to begin
+Raymond approved Milestone 11 - Get Back on Track Summaries via `10_DELIVERABLES/Milestone 11 Proposal.md`, kept as one milestone (not split into a deterministic-only phase and an AI phase). The summary must always work without `OPENAI_API_KEY`; the AI narrative is optional, additive, request-driven, and never stored.
+
+### 2026-07-17 - Milestone 11 completed with request-driven summary and narrative
+Milestone 11 added `POST /projects/:id/resume-summary`, returning project fields, linked open tasks, linked waiting tasks, and the latest three project updates from trusted SQLite data, plus an optional AI narrative when a provider is configured. The narrative reuses Milestone 10.1's OpenAI provider plumbing (`callOpenAIResponsesApi`, `getRuntimeOpenAIConfig`), extracted from `classificationService.js` without changing Milestone 10.1's tested behavior. Completed and archived projects are rejected before any provider call. No database write occurs from this endpoint under any condition. Live OpenAI narrative verification is deferred to the same bundled end-of-Version-1 smoke test as Milestone 10.1.

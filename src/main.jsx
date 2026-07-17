@@ -11,6 +11,7 @@ function App() {
   const [reviewLaterResources, setReviewLaterResources] = useState([]);
   const [projects, setProjects] = useState([]);
   const [projectUpdates, setProjectUpdates] = useState({});
+  const [resumeSummaryByProject, setResumeSummaryByProject] = useState({});
   const [arsenalItems, setArsenalItems] = useState([]);
   const [promptLibraryItems, setPromptLibraryItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -264,6 +265,33 @@ function App() {
     event.currentTarget.reset();
     setMessage("Project update saved.");
     await loadProjectUpdates(projectId);
+  }
+
+  async function requestResumeSummary(projectId) {
+    setResumeSummaryByProject((current) => ({
+      ...current,
+      [projectId]: { status: "loading" },
+    }));
+
+    const response = await fetch(`${apiBaseUrl}/projects/${projectId}/resume-summary`, {
+      method: "POST",
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      setResumeSummaryByProject((current) => ({
+        ...current,
+        [projectId]: {
+          status: response.status === 409 ? "not_eligible" : "error",
+        },
+      }));
+      return;
+    }
+
+    setResumeSummaryByProject((current) => ({
+      ...current,
+      [projectId]: { status: "ready", summary: data },
+    }));
   }
 
   async function saveReviewLaterResource(event) {
@@ -1308,6 +1336,16 @@ function App() {
                 <button type="submit">Add Update</button>
               </form>
 
+              <h3>Get Back on Track</h3>
+              <button
+                type="button"
+                onClick={() => requestResumeSummary(project.id)}
+                disabled={resumeSummaryByProject[project.id]?.status === "loading"}
+              >
+                {resumeSummaryByProject[project.id] ? "Refresh Summary" : "Get Back on Track"}
+              </button>
+              {renderResumeSummary(resumeSummaryByProject[project.id])}
+
               <h3>Project Updates</h3>
               {(projectUpdates[project.id] ?? []).length === 0 ? (
                 <p>No updates yet.</p>
@@ -1327,6 +1365,77 @@ function App() {
         </ul>
       )}
     </main>
+  );
+}
+
+function renderResumeSummary(state) {
+  if (!state) {
+    return null;
+  }
+
+  if (state.status === "loading") {
+    return <p>Generating summary...</p>;
+  }
+
+  if (state.status === "not_eligible") {
+    return <p>Completed or archived projects cannot generate a summary.</p>;
+  }
+
+  if (state.status === "error") {
+    return <p>Summary could not be generated.</p>;
+  }
+
+  const summary = state.summary;
+
+  return (
+    <section>
+      <p>Last completed step: {summary.project.last_completed_step ?? "none recorded"}</p>
+      <p>Current blocker: {summary.project.current_blocker ?? "none recorded"}</p>
+      <p>Next action: {summary.project.next_action ?? "none recorded"}</p>
+      <p>Waiting on: {summary.project.waiting_on ?? "none recorded"}</p>
+
+      <h4>Open Tasks</h4>
+      {summary.open_tasks.length === 0 ? (
+        <p>No open tasks.</p>
+      ) : (
+        <ul>
+          {summary.open_tasks.map((task) => (
+            <li key={task.id}>{task.title}</li>
+          ))}
+        </ul>
+      )}
+
+      <h4>Waiting Tasks</h4>
+      {summary.waiting_tasks.length === 0 ? (
+        <p>No waiting tasks.</p>
+      ) : (
+        <ul>
+          {summary.waiting_tasks.map((task) => (
+            <li key={task.id}>{task.title}</li>
+          ))}
+        </ul>
+      )}
+
+      <h4>Recent Updates</h4>
+      {summary.recent_updates.length === 0 ? (
+        <p>No recent updates.</p>
+      ) : (
+        <ul>
+          {summary.recent_updates.map((update) => (
+            <li key={update.id}>{update.update_text}</li>
+          ))}
+        </ul>
+      )}
+
+      <h4>Narrative</h4>
+      {summary.narrative_status === "available" ? (
+        <p>{summary.narrative}</p>
+      ) : summary.narrative_status === "unavailable" ? (
+        <p>AI narrative is not configured. Summary above is still complete.</p>
+      ) : (
+        <p>AI narrative could not be generated. Summary above is still complete.</p>
+      )}
+    </section>
   );
 }
 
