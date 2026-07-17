@@ -11,7 +11,7 @@ import {
   PromptLibrarySection,
   ProjectsSection,
 } from "./sections.jsx";
-import { Card } from "./ui.jsx";
+import "./styles.css";
 
 const apiBaseUrl = "http://127.0.0.1:3001";
 
@@ -701,24 +701,22 @@ function App() {
   return (
     <div className="app-shell">
       <nav className="app-nav">
-        <Card>
-          <ul>
-            {navItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  type="button"
-                  onClick={() => setActiveSection(item.id)}
-                  aria-current={activeSection === item.id ? "page" : undefined}
-                >
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </Card>
+        {navItems.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className={
+              activeSection === item.id ? "app-nav-item active" : "app-nav-item"
+            }
+            onClick={() => setActiveSection(item.id)}
+            aria-current={activeSection === item.id ? "page" : undefined}
+          >
+            {item.label}
+          </button>
+        ))}
       </nav>
 
-      <main className="app-main">
+      <main className="app-content">
       {activeSection === "morning-brief" ? (
       <MorningBriefSection
         morningBrief={morningBrief}

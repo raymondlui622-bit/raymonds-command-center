@@ -1,4 +1,5 @@
 import React from "react";
+import { Card, EmptyState, StatusBadge, Section } from "./ui.jsx";
 
 const morningBriefSections = [
   "requires_raymond",
@@ -29,9 +30,23 @@ const reviewLaterStatuses = [
   "archived",
 ];
 
+function captureStatusVariant(status) {
+  return status === "archived" ? "neutral" : "accent";
+}
+
+function reviewStatusVariant(reviewStatus) {
+  if (reviewStatus === "proposed") {
+    return "warn";
+  }
+  if (reviewStatus === "dismissed") {
+    return "neutral";
+  }
+  return "accent";
+}
+
 function renderMorningBriefItems({ items, onReview }) {
   if (items.length === 0) {
-    return <p>No items.</p>;
+    return <EmptyState>No items.</EmptyState>;
   }
 
   return (
@@ -44,7 +59,9 @@ function renderMorningBriefItems({ items, onReview }) {
           <p>Importance: {item.importance}</p>
           <p>Suggested action: {item.suggested_action}</p>
           {item.ai_narrative ? <p>AI narrative: {item.ai_narrative}</p> : null}
-          <p>Status: {item.review_status}</p>
+          <p>
+            Status: <StatusBadge variant={reviewStatusVariant(item.review_status)}>{item.review_status}</StatusBadge>
+          </p>
 
           {item.review_status === "proposed" ? (
             <>
@@ -103,7 +120,7 @@ function renderResumeSummary(state) {
   const summary = state.summary;
 
   return (
-    <section>
+    <Card tint>
       <p>Last completed step: {summary.project.last_completed_step ?? "none recorded"}</p>
       <p>Current blocker: {summary.project.current_blocker ?? "none recorded"}</p>
       <p>Next action: {summary.project.next_action ?? "none recorded"}</p>
@@ -111,7 +128,7 @@ function renderResumeSummary(state) {
 
       <h4>Open Tasks</h4>
       {summary.open_tasks.length === 0 ? (
-        <p>No open tasks.</p>
+        <EmptyState>No open tasks.</EmptyState>
       ) : (
         <ul>
           {summary.open_tasks.map((task) => (
@@ -122,7 +139,7 @@ function renderResumeSummary(state) {
 
       <h4>Waiting Tasks</h4>
       {summary.waiting_tasks.length === 0 ? (
-        <p>No waiting tasks.</p>
+        <EmptyState>No waiting tasks.</EmptyState>
       ) : (
         <ul>
           {summary.waiting_tasks.map((task) => (
@@ -133,7 +150,7 @@ function renderResumeSummary(state) {
 
       <h4>Recent Updates</h4>
       {summary.recent_updates.length === 0 ? (
-        <p>No recent updates.</p>
+        <EmptyState>No recent updates.</EmptyState>
       ) : (
         <ul>
           {summary.recent_updates.map((update) => (
@@ -150,7 +167,7 @@ function renderResumeSummary(state) {
       ) : (
         <p>AI narrative could not be generated. Summary above is still complete.</p>
       )}
-    </section>
+    </Card>
   );
 }
 
@@ -189,7 +206,7 @@ function renderClassificationPanel({
   const isTask = suggestion.proposed_record_type === "task";
 
   return (
-    <section>
+    <Card tint>
       <h3>Classification Suggestion</h3>
       <p>Type: {suggestion.proposed_record_type}</p>
       <p>Reason: {suggestion.reasoning}</p>
@@ -243,7 +260,7 @@ function renderClassificationPanel({
         <button type="submit" disabled={state.status === "accepting" || state.status === "accepted"}>
           Accept
         </button>
-        <button type="button" onClick={() => onReject(capture.id)}>
+        <button type="button" className="secondary" onClick={() => onReject(capture.id)}>
           Reject
         </button>
       </form>
@@ -299,7 +316,7 @@ function renderClassificationPanel({
 
         <button type="submit">Record Correction</button>
       </form>
-    </section>
+    </Card>
   );
 }
 
@@ -312,18 +329,23 @@ export function MorningBriefSection({
   onReviewItem,
 }) {
   return (
-    <>
-      <h1>Morning Brief</h1>
-      <button type="button" onClick={onGenerate} disabled={morningBriefStatus === "loading"}>
-        {morningBrief ? "Refresh Morning Brief" : "Generate Morning Brief"}
-      </button>
-      {morningBriefStatus === "loading" ? <p>Generating brief...</p> : null}
-      {morningBriefStatus === "error" ? <p>Morning Brief could not be generated.</p> : null}
+    <Section title="Morning Brief">
+      <Card>
+        <button type="button" onClick={onGenerate} disabled={morningBriefStatus === "loading"}>
+          {morningBrief ? "Refresh Morning Brief" : "Generate Morning Brief"}
+        </button>
+        {morningBriefStatus === "loading" ? <p>Generating brief...</p> : null}
+        {morningBriefStatus === "error" ? <p>Morning Brief could not be generated.</p> : null}
+        {morningBrief ? (
+          <>
+            <p>Generated: {morningBrief.generated_at}</p>
+            <p>AI status: {morningBrief.ai_status ?? "unavailable"}</p>
+          </>
+        ) : null}
+      </Card>
+
       {morningBrief ? (
         <>
-          <p>Generated: {morningBrief.generated_at}</p>
-          <p>AI status: {morningBrief.ai_status ?? "unavailable"}</p>
-
           <h2>Requires Raymond</h2>
           {renderMorningBriefItems({
             items: showAllRequiresRaymond
@@ -332,7 +354,7 @@ export function MorningBriefSection({
             onReview: onReviewItem,
           })}
           {morningBrief.items.requires_raymond.length > 7 ? (
-            <button type="button" onClick={onToggleShowAllRequiresRaymond}>
+            <button type="button" className="secondary" onClick={onToggleShowAllRequiresRaymond}>
               {showAllRequiresRaymond
                 ? "Show fewer"
                 : `Show ${morningBrief.items.requires_raymond.length - 7} more`}
@@ -355,42 +377,43 @@ export function MorningBriefSection({
           {renderMorningBriefItems({ items: morningBrief.items.fyi, onReview: onReviewItem })}
         </>
       ) : (
-        <p>No Morning Brief generated yet.</p>
+        <EmptyState>No Morning Brief generated yet.</EmptyState>
       )}
-    </>
+    </Section>
   );
 }
 
 export function SearchSection({ onSearch, searchResults }) {
   return (
-    <>
-      <h1>Search</h1>
-      <form onSubmit={onSearch}>
-        <label htmlFor="search-query">Keyword</label>
-        <input id="search-query" name="q" />
+    <Section title="Search">
+      <Card>
+        <form onSubmit={onSearch}>
+          <label htmlFor="search-query">Keyword</label>
+          <input id="search-query" name="q" />
 
-        <label htmlFor="search-status">Status</label>
-        <input id="search-status" name="status" />
+          <label htmlFor="search-status">Status</label>
+          <input id="search-status" name="status" />
 
-        <label htmlFor="search-related-project">Related project id</label>
-        <input id="search-related-project" name="related_project_id" />
+          <label htmlFor="search-related-project">Related project id</label>
+          <input id="search-related-project" name="related_project_id" />
 
-        <label htmlFor="search-record-type">Record type</label>
-        <select id="search-record-type" name="record_type" defaultValue="">
-          <option value="">all</option>
-          {searchRecordTypes.map((recordType) => (
-            <option key={recordType} value={recordType}>
-              {recordType}
-            </option>
-          ))}
-        </select>
+          <label htmlFor="search-record-type">Record type</label>
+          <select id="search-record-type" name="record_type" defaultValue="">
+            <option value="">all</option>
+            {searchRecordTypes.map((recordType) => (
+              <option key={recordType} value={recordType}>
+                {recordType}
+              </option>
+            ))}
+          </select>
 
-        <button type="submit">Search</button>
-      </form>
+          <button type="submit">Search</button>
+        </form>
+      </Card>
 
       <h2>Search Results</h2>
       {searchResults.length === 0 ? (
-        <p>No search results.</p>
+        <EmptyState>No search results.</EmptyState>
       ) : (
         <ul>
           {searchResults.map((result) => (
@@ -406,25 +429,26 @@ export function SearchSection({ onSearch, searchResults }) {
           ))}
         </ul>
       )}
-    </>
+    </Section>
   );
 }
 
 export function ExportSection({ apiBaseUrl }) {
   return (
-    <>
-      <h1>Export</h1>
-      <p>
-        <a href={`${apiBaseUrl}/export.json`} download>
-          Download JSON export
-        </a>
-      </p>
-      <p>
-        <a href={`${apiBaseUrl}/export.md`} download>
-          Download Markdown export
-        </a>
-      </p>
-    </>
+    <Section title="Export">
+      <Card>
+        <p>
+          <a href={`${apiBaseUrl}/export.json`} download>
+            Download JSON export
+          </a>
+        </p>
+        <p>
+          <a href={`${apiBaseUrl}/export.md`} download>
+            Download Markdown export
+          </a>
+        </p>
+      </Card>
+    </Section>
   );
 }
 
@@ -443,32 +467,35 @@ export function RawCaptureSection({
   onArchiveCapture,
 }) {
   return (
-    <>
-      <h1>Raw Capture</h1>
-      <p>Backend: {health}</p>
+    <Section title="Raw Capture">
+      <Card>
+        <p>Backend: {health}</p>
 
-      <form onSubmit={onSaveCapture}>
-        <label htmlFor="raw-capture">Capture</label>
-        <textarea
-          id="raw-capture"
-          rows="6"
-          value={rawText}
-          onChange={(event) => onRawTextChange(event.target.value)}
-        />
-        <button type="submit">Save Capture</button>
-      </form>
+        <form onSubmit={onSaveCapture}>
+          <label htmlFor="raw-capture">Capture</label>
+          <textarea
+            id="raw-capture"
+            rows="6"
+            value={rawText}
+            onChange={(event) => onRawTextChange(event.target.value)}
+          />
+          <button type="submit">Save Capture</button>
+        </form>
 
-      {message ? <p>{message}</p> : null}
+        {message ? <p>{message}</p> : null}
+      </Card>
 
       <h2>Captures</h2>
       {captures.length === 0 ? (
-        <p>No captures yet.</p>
+        <EmptyState>No captures yet.</EmptyState>
       ) : (
         <ul>
           {captures.map((capture) => (
             <li key={capture.id}>
               <pre>{capture.raw_text}</pre>
-              <p>Status: {capture.status}</p>
+              <p>
+                Status: <StatusBadge variant={captureStatusVariant(capture.status)}>{capture.status}</StatusBadge>
+              </p>
               <button type="button" onClick={() => onRequestClassification(capture.id)}>
                 Request Classification
               </button>
@@ -480,7 +507,7 @@ export function RawCaptureSection({
                 onRecordCorrection: onRecordClassificationCorrection,
               })}
               {capture.status !== "archived" ? (
-                <button type="button" onClick={() => onArchiveCapture(capture.id)}>
+                <button type="button" className="danger" onClick={() => onArchiveCapture(capture.id)}>
                   Archive
                 </button>
               ) : null}
@@ -488,54 +515,55 @@ export function RawCaptureSection({
           ))}
         </ul>
       )}
-    </>
+    </Section>
   );
 }
 
 export function TasksSection({ tasks, onSaveTask, onUpdateTask, onCompleteTask, onArchiveTask }) {
   return (
-    <>
-      <h1>Tasks</h1>
-      <form onSubmit={onSaveTask}>
-        <label htmlFor="task-title">Title</label>
-        <input id="task-title" name="title" />
+    <Section title="Tasks">
+      <Card>
+        <form onSubmit={onSaveTask}>
+          <label htmlFor="task-title">Title</label>
+          <input id="task-title" name="title" />
 
-        <label htmlFor="task-status">Status</label>
-        <select id="task-status" name="status" defaultValue="open">
-          {taskStatuses.map((status) => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
+          <label htmlFor="task-status">Status</label>
+          <select id="task-status" name="status" defaultValue="open">
+            {taskStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
 
-        <label htmlFor="task-priority">Priority</label>
-        <input id="task-priority" name="priority" defaultValue="medium" />
+          <label htmlFor="task-priority">Priority</label>
+          <input id="task-priority" name="priority" defaultValue="medium" />
 
-        <label htmlFor="task-description">Description</label>
-        <textarea id="task-description" name="description" rows="3" />
+          <label htmlFor="task-description">Description</label>
+          <textarea id="task-description" name="description" rows="3" />
 
-        <label htmlFor="task-related-project">Related project id</label>
-        <input id="task-related-project" name="related_project_id" />
+          <label htmlFor="task-related-project">Related project id</label>
+          <input id="task-related-project" name="related_project_id" />
 
-        <label htmlFor="task-waiting-on">Waiting on</label>
-        <input id="task-waiting-on" name="waiting_on" />
+          <label htmlFor="task-waiting-on">Waiting on</label>
+          <input id="task-waiting-on" name="waiting_on" />
 
-        <label htmlFor="task-follow-up-date">Follow-up date</label>
-        <input id="task-follow-up-date" name="follow_up_date" type="date" />
+          <label htmlFor="task-follow-up-date">Follow-up date</label>
+          <input id="task-follow-up-date" name="follow_up_date" type="date" />
 
-        <label htmlFor="task-last-contacted-at">Last contacted</label>
-        <input id="task-last-contacted-at" name="last_contacted_at" type="date" />
+          <label htmlFor="task-last-contacted-at">Last contacted</label>
+          <input id="task-last-contacted-at" name="last_contacted_at" type="date" />
 
-        <label htmlFor="task-next-action">Next action</label>
-        <input id="task-next-action" name="next_action" />
+          <label htmlFor="task-next-action">Next action</label>
+          <input id="task-next-action" name="next_action" />
 
-        <button type="submit">Save Task</button>
-      </form>
+          <button type="submit">Save Task</button>
+        </form>
+      </Card>
 
       <h2>Task List</h2>
       {tasks.length === 0 ? (
-        <p>No tasks yet.</p>
+        <EmptyState>No tasks yet.</EmptyState>
       ) : (
         <ul>
           {tasks.map((task) => (
@@ -603,12 +631,12 @@ export function TasksSection({ tasks, onSaveTask, onUpdateTask, onCompleteTask, 
 
                 <button type="submit">Update</button>
                 {task.status !== "done" && task.status !== "archived" ? (
-                  <button type="button" onClick={() => onCompleteTask(task.id)}>
+                  <button type="button" className="secondary" onClick={() => onCompleteTask(task.id)}>
                     Complete
                   </button>
                 ) : null}
                 {task.status !== "archived" ? (
-                  <button type="button" onClick={() => onArchiveTask(task.id)}>
+                  <button type="button" className="danger" onClick={() => onArchiveTask(task.id)}>
                     Archive
                   </button>
                 ) : null}
@@ -617,7 +645,7 @@ export function TasksSection({ tasks, onSaveTask, onUpdateTask, onCompleteTask, 
           ))}
         </ul>
       )}
-    </>
+    </Section>
   );
 }
 
@@ -628,36 +656,37 @@ export function ReviewLaterSection({
   onArchiveReviewLaterResource,
 }) {
   return (
-    <>
-      <h1>Review Later</h1>
-      <form onSubmit={onSaveReviewLaterResource}>
-        <label htmlFor="resource-title">Title</label>
-        <input id="resource-title" name="title" />
+    <Section title="Review Later">
+      <Card>
+        <form onSubmit={onSaveReviewLaterResource}>
+          <label htmlFor="resource-title">Title</label>
+          <input id="resource-title" name="title" />
 
-        <label htmlFor="resource-type">Type</label>
-        <input id="resource-type" name="resource_type" />
+          <label htmlFor="resource-type">Type</label>
+          <input id="resource-type" name="resource_type" />
 
-        <label htmlFor="resource-url-or-location">URL or location</label>
-        <input id="resource-url-or-location" name="url_or_location" />
+          <label htmlFor="resource-url-or-location">URL or location</label>
+          <input id="resource-url-or-location" name="url_or_location" />
 
-        <label htmlFor="resource-why-it-matters">Why it matters</label>
-        <textarea id="resource-why-it-matters" name="why_it_matters" rows="3" />
+          <label htmlFor="resource-why-it-matters">Why it matters</label>
+          <textarea id="resource-why-it-matters" name="why_it_matters" rows="3" />
 
-        <label htmlFor="resource-related-project">Related project id</label>
-        <input id="resource-related-project" name="related_project_id" />
+          <label htmlFor="resource-related-project">Related project id</label>
+          <input id="resource-related-project" name="related_project_id" />
 
-        <label htmlFor="resource-possible-use">Possible use</label>
-        <input id="resource-possible-use" name="possible_use" />
+          <label htmlFor="resource-possible-use">Possible use</label>
+          <input id="resource-possible-use" name="possible_use" />
 
-        <label htmlFor="resource-tags">Tags</label>
-        <input id="resource-tags" name="tags" />
+          <label htmlFor="resource-tags">Tags</label>
+          <input id="resource-tags" name="tags" />
 
-        <button type="submit">Save Resource</button>
-      </form>
+          <button type="submit">Save Resource</button>
+        </form>
+      </Card>
 
       <h2>Review Later List</h2>
       {reviewLaterResources.length === 0 ? (
-        <p>No resources yet.</p>
+        <EmptyState>No resources yet.</EmptyState>
       ) : (
         <ul>
           {reviewLaterResources.map((resource) => (
@@ -736,7 +765,11 @@ export function ReviewLaterSection({
 
                 <button type="submit">Update</button>
                 {resource.status !== "archived" ? (
-                  <button type="button" onClick={() => onArchiveReviewLaterResource(resource.id)}>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => onArchiveReviewLaterResource(resource.id)}
+                  >
                     Archive
                   </button>
                 ) : null}
@@ -745,7 +778,7 @@ export function ReviewLaterSection({
           ))}
         </ul>
       )}
-    </>
+    </Section>
   );
 }
 
@@ -756,33 +789,34 @@ export function ArsenalSection({
   onArchiveArsenalItem,
 }) {
   return (
-    <>
-      <h1>My Arsenal</h1>
-      <form onSubmit={onSaveArsenalItem}>
-        <label htmlFor="arsenal-name">Name</label>
-        <input id="arsenal-name" name="name" />
+    <Section title="My Arsenal">
+      <Card>
+        <form onSubmit={onSaveArsenalItem}>
+          <label htmlFor="arsenal-name">Name</label>
+          <input id="arsenal-name" name="name" />
 
-        <label htmlFor="arsenal-category">Category</label>
-        <input id="arsenal-category" name="category" />
+          <label htmlFor="arsenal-category">Category</label>
+          <input id="arsenal-category" name="category" />
 
-        <label htmlFor="arsenal-description">Description</label>
-        <textarea id="arsenal-description" name="description" rows="3" />
+          <label htmlFor="arsenal-description">Description</label>
+          <textarea id="arsenal-description" name="description" rows="3" />
 
-        <label htmlFor="arsenal-url">URL</label>
-        <input id="arsenal-url" name="url" />
+          <label htmlFor="arsenal-url">URL</label>
+          <input id="arsenal-url" name="url" />
 
-        <label htmlFor="arsenal-tags">Tags</label>
-        <input id="arsenal-tags" name="tags" />
+          <label htmlFor="arsenal-tags">Tags</label>
+          <input id="arsenal-tags" name="tags" />
 
-        <label htmlFor="arsenal-notes">Notes</label>
-        <textarea id="arsenal-notes" name="notes" rows="3" />
+          <label htmlFor="arsenal-notes">Notes</label>
+          <textarea id="arsenal-notes" name="notes" rows="3" />
 
-        <button type="submit">Save Arsenal Item</button>
-      </form>
+          <button type="submit">Save Arsenal Item</button>
+        </form>
+      </Card>
 
       <h2>My Arsenal List</h2>
       {arsenalItems.length === 0 ? (
-        <p>No arsenal items yet.</p>
+        <EmptyState>No arsenal items yet.</EmptyState>
       ) : (
         <ul>
           {arsenalItems.map((item) => (
@@ -839,7 +873,7 @@ export function ArsenalSection({
 
                 <button type="submit">Update</button>
                 {item.status !== "archived" ? (
-                  <button type="button" onClick={() => onArchiveArsenalItem(item.id)}>
+                  <button type="button" className="danger" onClick={() => onArchiveArsenalItem(item.id)}>
                     Archive
                   </button>
                 ) : null}
@@ -848,7 +882,7 @@ export function ArsenalSection({
           ))}
         </ul>
       )}
-    </>
+    </Section>
   );
 }
 
@@ -861,35 +895,36 @@ export function PromptLibrarySection({
   onArchivePromptLibraryItem,
 }) {
   return (
-    <>
-      <h1>Prompt Library</h1>
-      <form onSubmit={onSavePromptLibraryItem}>
-        <label htmlFor="prompt-title">Title</label>
-        <input id="prompt-title" name="title" />
+    <Section title="Prompt Library">
+      <Card>
+        <form onSubmit={onSavePromptLibraryItem}>
+          <label htmlFor="prompt-title">Title</label>
+          <input id="prompt-title" name="title" />
 
-        <label htmlFor="prompt-category">Category</label>
-        <input id="prompt-category" name="category" />
+          <label htmlFor="prompt-category">Category</label>
+          <input id="prompt-category" name="category" />
 
-        <label htmlFor="prompt-description">Description</label>
-        <textarea id="prompt-description" name="description" rows="3" />
+          <label htmlFor="prompt-description">Description</label>
+          <textarea id="prompt-description" name="description" rows="3" />
 
-        <label htmlFor="prompt-full-prompt">Full prompt</label>
-        <textarea id="prompt-full-prompt" name="full_prompt" rows="5" />
+          <label htmlFor="prompt-full-prompt">Full prompt</label>
+          <textarea id="prompt-full-prompt" name="full_prompt" rows="5" />
 
-        <label htmlFor="prompt-tags">Tags</label>
-        <input id="prompt-tags" name="tags" />
+          <label htmlFor="prompt-tags">Tags</label>
+          <input id="prompt-tags" name="tags" />
 
-        <label htmlFor="prompt-is-favorite">
-          <input id="prompt-is-favorite" name="is_favorite" type="checkbox" value="1" />
-          Favorite
-        </label>
+          <label htmlFor="prompt-is-favorite">
+            <input id="prompt-is-favorite" name="is_favorite" type="checkbox" value="1" />
+            Favorite
+          </label>
 
-        <button type="submit">Save Prompt</button>
-      </form>
+          <button type="submit">Save Prompt</button>
+        </form>
+      </Card>
 
       <h2>Prompt Library List</h2>
       {promptLibraryItems.length === 0 ? (
-        <p>No prompts yet.</p>
+        <EmptyState>No prompts yet.</EmptyState>
       ) : (
         <ul>
           {promptLibraryItems.map((prompt) => (
@@ -953,17 +988,22 @@ export function PromptLibrarySection({
                 </label>
 
                 <button type="submit">Update</button>
-                <button type="button" onClick={() => onCopyPrompt(prompt.full_prompt)}>
+                <button type="button" className="secondary" onClick={() => onCopyPrompt(prompt.full_prompt)}>
                   Copy
                 </button>
                 <button
                   type="button"
+                  className="secondary"
                   onClick={() => onSetPromptFavorite(prompt.id, prompt.is_favorite !== 1)}
                 >
                   {prompt.is_favorite === 1 ? "Unfavorite" : "Favorite"}
                 </button>
                 {prompt.status !== "archived" ? (
-                  <button type="button" onClick={() => onArchivePromptLibraryItem(prompt.id)}>
+                  <button
+                    type="button"
+                    className="danger"
+                    onClick={() => onArchivePromptLibraryItem(prompt.id)}
+                  >
                     Archive
                   </button>
                 ) : null}
@@ -972,7 +1012,7 @@ export function PromptLibrarySection({
           ))}
         </ul>
       )}
-    </>
+    </Section>
   );
 }
 
@@ -987,54 +1027,55 @@ export function ProjectsSection({
   projectUpdates,
 }) {
   return (
-    <>
-      <h1>Projects</h1>
-      <form onSubmit={onSaveProject}>
-        <label htmlFor="project-name">Name</label>
-        <input id="project-name" name="name" />
+    <Section title="Projects">
+      <Card>
+        <form onSubmit={onSaveProject}>
+          <label htmlFor="project-name">Name</label>
+          <input id="project-name" name="name" />
 
-        <label htmlFor="project-status">Status</label>
-        <select id="project-status" name="status" defaultValue="active">
-          {projectStatuses.map((status) => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
+          <label htmlFor="project-status">Status</label>
+          <select id="project-status" name="status" defaultValue="active">
+            {projectStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
 
-        <label htmlFor="project-current-phase">Current phase</label>
-        <input id="project-current-phase" name="current_phase" />
+          <label htmlFor="project-current-phase">Current phase</label>
+          <input id="project-current-phase" name="current_phase" />
 
-        <label htmlFor="project-priority">Priority</label>
-        <input id="project-priority" name="priority" defaultValue="medium" />
+          <label htmlFor="project-priority">Priority</label>
+          <input id="project-priority" name="priority" defaultValue="medium" />
 
-        <label htmlFor="project-source-of-truth">Source of truth</label>
-        <input id="project-source-of-truth" name="source_of_truth" />
+          <label htmlFor="project-source-of-truth">Source of truth</label>
+          <input id="project-source-of-truth" name="source_of_truth" />
 
-        <label htmlFor="project-last-completed-step">Last completed step</label>
-        <input id="project-last-completed-step" name="last_completed_step" />
+          <label htmlFor="project-last-completed-step">Last completed step</label>
+          <input id="project-last-completed-step" name="last_completed_step" />
 
-        <label htmlFor="project-current-blocker">Current blocker</label>
-        <input id="project-current-blocker" name="current_blocker" />
+          <label htmlFor="project-current-blocker">Current blocker</label>
+          <input id="project-current-blocker" name="current_blocker" />
 
-        <label htmlFor="project-next-action">Next action</label>
-        <input id="project-next-action" name="next_action" />
+          <label htmlFor="project-next-action">Next action</label>
+          <input id="project-next-action" name="next_action" />
 
-        <label htmlFor="project-waiting-on">Waiting on</label>
-        <input id="project-waiting-on" name="waiting_on" />
+          <label htmlFor="project-waiting-on">Waiting on</label>
+          <input id="project-waiting-on" name="waiting_on" />
 
-        <label htmlFor="project-due-date">Due date</label>
-        <input id="project-due-date" name="due_date" type="date" />
+          <label htmlFor="project-due-date">Due date</label>
+          <input id="project-due-date" name="due_date" type="date" />
 
-        <label htmlFor="project-active-reason">Active reason</label>
-        <input id="project-active-reason" name="active_reason" />
+          <label htmlFor="project-active-reason">Active reason</label>
+          <input id="project-active-reason" name="active_reason" />
 
-        <button type="submit">Save Project</button>
-      </form>
+          <button type="submit">Save Project</button>
+        </form>
+      </Card>
 
       <h2>Project List</h2>
       {projects.length === 0 ? (
-        <p>No projects yet.</p>
+        <EmptyState>No projects yet.</EmptyState>
       ) : (
         <ul>
           {projects.map((project) => (
@@ -1130,7 +1171,7 @@ export function ProjectsSection({
 
                 <button type="submit">Update</button>
                 {project.status !== "archived" ? (
-                  <button type="button" onClick={() => onArchiveProject(project.id)}>
+                  <button type="button" className="danger" onClick={() => onArchiveProject(project.id)}>
                     Archive
                   </button>
                 ) : null}
@@ -1160,6 +1201,7 @@ export function ProjectsSection({
               <h3>Get Back on Track</h3>
               <button
                 type="button"
+                className="secondary"
                 onClick={() => onRequestResumeSummary(project.id)}
                 disabled={resumeSummaryByProject[project.id]?.status === "loading"}
               >
@@ -1169,7 +1211,7 @@ export function ProjectsSection({
 
               <h3>Project Updates</h3>
               {(projectUpdates[project.id] ?? []).length === 0 ? (
-                <p>No updates yet.</p>
+                <EmptyState>No updates yet.</EmptyState>
               ) : (
                 <ul>
                   {(projectUpdates[project.id] ?? []).map((update) => (
@@ -1185,6 +1227,6 @@ export function ProjectsSection({
           ))}
         </ul>
       )}
-    </>
+    </Section>
   );
 }
