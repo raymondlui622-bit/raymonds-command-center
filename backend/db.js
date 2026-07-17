@@ -2,8 +2,10 @@ import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
+import { migrateArsenalItems } from "./migrations/arsenalItems.js";
 import { migrateProjectUpdates } from "./migrations/projectUpdates.js";
 import { migrateProjects } from "./migrations/projects.js";
+import { migratePromptLibraryItems } from "./migrations/promptLibraryItems.js";
 import { migrateRawCaptures } from "./migrations/rawCaptures.js";
 import { migrateReviewLaterResources } from "./migrations/reviewLaterResources.js";
 import { migrateTasks } from "./migrations/tasks.js";
@@ -23,6 +25,8 @@ export function initializeDatabase(database) {
   migrateReviewLaterResources(database);
   migrateProjects(database);
   migrateProjectUpdates(database);
+  migrateArsenalItems(database);
+  migratePromptLibraryItems(database);
 }
 
 export function getDatabase(path = databasePath) {

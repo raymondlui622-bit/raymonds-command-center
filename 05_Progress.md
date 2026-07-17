@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 8 Complete.
+Phase 3 - Milestone 9 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -105,14 +105,23 @@ Phase 3 - Milestone 8 Complete.
 - Confirmed stored fields are represented without claiming import readiness.
 - Confirmed exports do not mutate records.
 - Created `10_DELIVERABLES/Milestone 8 Verification.md`.
+- Raymond approved Milestone 9 - Minimal My Arsenal and Prompt Library.
+- Completed Milestone 9 - Minimal My Arsenal and Prompt Library.
+- Added My Arsenal schema, backend handlers, and minimal frontend view.
+- Added Prompt Library schema, backend handlers, favorite support, copy button, and minimal frontend view.
+- Extended search to include My Arsenal and Prompt Library records.
+- Confirmed archived Arsenal and Prompt records remain retrievable and searchable.
+- Confirmed Prompt Library `is_favorite` is stored as an integer and not a status.
+- Confirmed no AI recommendations, auto-crawling, prompt execution, versioning, external integrations, export changes, or new dependencies were added.
+- Created `10_DELIVERABLES/Milestone 9 Verification.md`.
 
 ## Not Started
-- Milestone 9 - Minimal My Arsenal and Prompt Library.
+- Milestone 10 - AI-Assisted Classification.
 - Integration planning.
 - Future module database tables.
 
 ## Current Blocker
-Milestone 9 is blocked until Raymond explicitly approves it to begin.
+Milestone 10 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 8 results. If approved, explicitly approve Milestone 9 - Minimal My Arsenal and Prompt Library.
+Review Milestone 9 results. If approved, explicitly approve Milestone 10 - AI-Assisted Classification.

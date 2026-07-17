@@ -11,6 +11,8 @@ function App() {
   const [reviewLaterResources, setReviewLaterResources] = useState([]);
   const [projects, setProjects] = useState([]);
   const [projectUpdates, setProjectUpdates] = useState({});
+  const [arsenalItems, setArsenalItems] = useState([]);
+  const [promptLibraryItems, setPromptLibraryItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -28,6 +30,8 @@ function App() {
     loadTasks();
     loadReviewLaterResources();
     loadProjects();
+    loadArsenalItems();
+    loadPromptLibraryItems();
   }, []);
 
   async function loadCaptures() {
@@ -59,6 +63,18 @@ function App() {
     const response = await fetch(`${apiBaseUrl}/projects/${projectId}/updates`);
     const data = await response.json();
     setProjectUpdates((current) => ({ ...current, [projectId]: data.updates }));
+  }
+
+  async function loadArsenalItems() {
+    const response = await fetch(`${apiBaseUrl}/arsenal`);
+    const data = await response.json();
+    setArsenalItems(data.items);
+  }
+
+  async function loadPromptLibraryItems() {
+    const response = await fetch(`${apiBaseUrl}/prompts`);
+    const data = await response.json();
+    setPromptLibraryItems(data.prompts);
   }
 
   async function search(event) {
@@ -302,6 +318,137 @@ function App() {
 
     setMessage("Resource archived.");
     await loadReviewLaterResources();
+  }
+
+  async function saveArsenalItem(event) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/arsenal`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(arsenalPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Arsenal item was not saved.");
+      return;
+    }
+
+    event.currentTarget.reset();
+    setMessage("Arsenal item saved.");
+    await loadArsenalItems();
+  }
+
+  async function updateArsenalItem(event, id) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/arsenal/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(arsenalPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Arsenal item was not updated.");
+      return;
+    }
+
+    setMessage("Arsenal item updated.");
+    await loadArsenalItems();
+  }
+
+  async function archiveArsenalItem(id) {
+    const response = await fetch(`${apiBaseUrl}/arsenal/${id}/archive`, {
+      method: "PATCH",
+    });
+
+    if (!response.ok) {
+      setMessage("Arsenal item was not archived.");
+      return;
+    }
+
+    setMessage("Arsenal item archived.");
+    await loadArsenalItems();
+  }
+
+  async function savePromptLibraryItem(event) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/prompts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(promptLibraryPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Prompt was not saved.");
+      return;
+    }
+
+    event.currentTarget.reset();
+    setMessage("Prompt saved.");
+    await loadPromptLibraryItems();
+  }
+
+  async function updatePromptLibraryItem(event, id) {
+    event.preventDefault();
+    setMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    const response = await fetch(`${apiBaseUrl}/prompts/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(promptLibraryPayloadFromFormData(formData)),
+    });
+
+    if (!response.ok) {
+      setMessage("Prompt was not updated.");
+      return;
+    }
+
+    setMessage("Prompt updated.");
+    await loadPromptLibraryItems();
+  }
+
+  async function setPromptFavorite(id, isFavorite) {
+    const response = await fetch(`${apiBaseUrl}/prompts/${id}/favorite`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_favorite: isFavorite ? 1 : 0 }),
+    });
+
+    if (!response.ok) {
+      setMessage("Prompt favorite was not updated.");
+      return;
+    }
+
+    setMessage(isFavorite ? "Prompt favorited." : "Prompt unfavorited.");
+    await loadPromptLibraryItems();
+  }
+
+  async function archivePromptLibraryItem(id) {
+    const response = await fetch(`${apiBaseUrl}/prompts/${id}/archive`, {
+      method: "PATCH",
+    });
+
+    if (!response.ok) {
+      setMessage("Prompt was not archived.");
+      return;
+    }
+
+    setMessage("Prompt archived.");
+    await loadPromptLibraryItems();
+  }
+
+  async function copyPrompt(fullPrompt) {
+    await navigator.clipboard.writeText(fullPrompt);
+    setMessage("Prompt copied.");
   }
 
   async function archiveCapture(id) {
@@ -650,6 +797,209 @@ function App() {
         </ul>
       )}
 
+      <h1>My Arsenal</h1>
+      <form onSubmit={saveArsenalItem}>
+        <label htmlFor="arsenal-name">Name</label>
+        <input id="arsenal-name" name="name" />
+
+        <label htmlFor="arsenal-category">Category</label>
+        <input id="arsenal-category" name="category" />
+
+        <label htmlFor="arsenal-description">Description</label>
+        <textarea id="arsenal-description" name="description" rows="3" />
+
+        <label htmlFor="arsenal-url">URL</label>
+        <input id="arsenal-url" name="url" />
+
+        <label htmlFor="arsenal-tags">Tags</label>
+        <input id="arsenal-tags" name="tags" />
+
+        <label htmlFor="arsenal-notes">Notes</label>
+        <textarea id="arsenal-notes" name="notes" rows="3" />
+
+        <button type="submit">Save Arsenal Item</button>
+      </form>
+
+      <h2>My Arsenal List</h2>
+      {arsenalItems.length === 0 ? (
+        <p>No arsenal items yet.</p>
+      ) : (
+        <ul>
+          {arsenalItems.map((item) => (
+            <li key={item.id}>
+              <form onSubmit={(event) => updateArsenalItem(event, item.id)}>
+                <label htmlFor={`arsenal-name-${item.id}`}>Name</label>
+                <input id={`arsenal-name-${item.id}`} name="name" defaultValue={item.name} />
+
+                <label htmlFor={`arsenal-category-${item.id}`}>Category</label>
+                <input
+                  id={`arsenal-category-${item.id}`}
+                  name="category"
+                  defaultValue={item.category ?? ""}
+                />
+
+                <label htmlFor={`arsenal-status-${item.id}`}>Status</label>
+                <select
+                  id={`arsenal-status-${item.id}`}
+                  name="status"
+                  defaultValue={item.status}
+                >
+                  {assetStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+
+                <label htmlFor={`arsenal-description-${item.id}`}>Description</label>
+                <textarea
+                  id={`arsenal-description-${item.id}`}
+                  name="description"
+                  rows="2"
+                  defaultValue={item.description ?? ""}
+                />
+
+                <label htmlFor={`arsenal-url-${item.id}`}>URL</label>
+                <input id={`arsenal-url-${item.id}`} name="url" defaultValue={item.url ?? ""} />
+
+                <label htmlFor={`arsenal-tags-${item.id}`}>Tags</label>
+                <input
+                  id={`arsenal-tags-${item.id}`}
+                  name="tags"
+                  defaultValue={item.tags ?? ""}
+                />
+
+                <label htmlFor={`arsenal-notes-${item.id}`}>Notes</label>
+                <textarea
+                  id={`arsenal-notes-${item.id}`}
+                  name="notes"
+                  rows="2"
+                  defaultValue={item.notes ?? ""}
+                />
+
+                <button type="submit">Update</button>
+                {item.status !== "archived" ? (
+                  <button type="button" onClick={() => archiveArsenalItem(item.id)}>
+                    Archive
+                  </button>
+                ) : null}
+              </form>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h1>Prompt Library</h1>
+      <form onSubmit={savePromptLibraryItem}>
+        <label htmlFor="prompt-title">Title</label>
+        <input id="prompt-title" name="title" />
+
+        <label htmlFor="prompt-category">Category</label>
+        <input id="prompt-category" name="category" />
+
+        <label htmlFor="prompt-description">Description</label>
+        <textarea id="prompt-description" name="description" rows="3" />
+
+        <label htmlFor="prompt-full-prompt">Full prompt</label>
+        <textarea id="prompt-full-prompt" name="full_prompt" rows="5" />
+
+        <label htmlFor="prompt-tags">Tags</label>
+        <input id="prompt-tags" name="tags" />
+
+        <label htmlFor="prompt-is-favorite">
+          <input id="prompt-is-favorite" name="is_favorite" type="checkbox" value="1" />
+          Favorite
+        </label>
+
+        <button type="submit">Save Prompt</button>
+      </form>
+
+      <h2>Prompt Library List</h2>
+      {promptLibraryItems.length === 0 ? (
+        <p>No prompts yet.</p>
+      ) : (
+        <ul>
+          {promptLibraryItems.map((prompt) => (
+            <li key={prompt.id}>
+              <form onSubmit={(event) => updatePromptLibraryItem(event, prompt.id)}>
+                <label htmlFor={`prompt-title-${prompt.id}`}>Title</label>
+                <input id={`prompt-title-${prompt.id}`} name="title" defaultValue={prompt.title} />
+
+                <label htmlFor={`prompt-category-${prompt.id}`}>Category</label>
+                <input
+                  id={`prompt-category-${prompt.id}`}
+                  name="category"
+                  defaultValue={prompt.category ?? ""}
+                />
+
+                <label htmlFor={`prompt-status-${prompt.id}`}>Status</label>
+                <select
+                  id={`prompt-status-${prompt.id}`}
+                  name="status"
+                  defaultValue={prompt.status}
+                >
+                  {assetStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+
+                <label htmlFor={`prompt-description-${prompt.id}`}>Description</label>
+                <textarea
+                  id={`prompt-description-${prompt.id}`}
+                  name="description"
+                  rows="2"
+                  defaultValue={prompt.description ?? ""}
+                />
+
+                <label htmlFor={`prompt-full-prompt-${prompt.id}`}>Full prompt</label>
+                <textarea
+                  id={`prompt-full-prompt-${prompt.id}`}
+                  name="full_prompt"
+                  rows="4"
+                  defaultValue={prompt.full_prompt}
+                />
+
+                <label htmlFor={`prompt-tags-${prompt.id}`}>Tags</label>
+                <input
+                  id={`prompt-tags-${prompt.id}`}
+                  name="tags"
+                  defaultValue={prompt.tags ?? ""}
+                />
+
+                <label htmlFor={`prompt-is-favorite-${prompt.id}`}>
+                  <input
+                    id={`prompt-is-favorite-${prompt.id}`}
+                    name="is_favorite"
+                    type="checkbox"
+                    value="1"
+                    defaultChecked={prompt.is_favorite === 1}
+                  />
+                  Favorite
+                </label>
+
+                <button type="submit">Update</button>
+                <button type="button" onClick={() => copyPrompt(prompt.full_prompt)}>
+                  Copy
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPromptFavorite(prompt.id, prompt.is_favorite !== 1)}
+                >
+                  {prompt.is_favorite === 1 ? "Unfavorite" : "Favorite"}
+                </button>
+                {prompt.status !== "archived" ? (
+                  <button type="button" onClick={() => archivePromptLibraryItem(prompt.id)}>
+                    Archive
+                  </button>
+                ) : null}
+              </form>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <h1>Projects</h1>
       <form onSubmit={saveProject}>
         <label htmlFor="project-name">Name</label>
@@ -849,7 +1199,10 @@ const searchRecordTypes = [
   "review_later_resource",
   "project",
   "project_update",
+  "arsenal_item",
+  "prompt_library_item",
 ];
+const assetStatuses = ["active", "archived"];
 const reviewLaterStatuses = [
   "new",
   "reviewing",
@@ -909,6 +1262,30 @@ function projectUpdatePayloadFromFormData(formData) {
     update_text: formData.get("update_text"),
     update_type: formData.get("update_type"),
     next_action: formData.get("next_action"),
+  };
+}
+
+function arsenalPayloadFromFormData(formData) {
+  return {
+    name: formData.get("name"),
+    category: formData.get("category"),
+    description: formData.get("description"),
+    url: formData.get("url"),
+    tags: formData.get("tags"),
+    notes: formData.get("notes"),
+    status: formData.get("status") || undefined,
+  };
+}
+
+function promptLibraryPayloadFromFormData(formData) {
+  return {
+    title: formData.get("title"),
+    category: formData.get("category"),
+    description: formData.get("description"),
+    full_prompt: formData.get("full_prompt"),
+    tags: formData.get("tags"),
+    is_favorite: formData.get("is_favorite") ? 1 : 0,
+    status: formData.get("status") || undefined,
   };
 }
 

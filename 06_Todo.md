@@ -21,7 +21,8 @@
 - Milestone 6 - Projects and Project Updates is complete.
 - Milestone 7 - Search Foundation is complete.
 - Milestone 8 - Export and Portability is complete.
-- Do not continue to Milestone 9 without explicit approval.
+- Milestone 9 - Minimal My Arsenal and Prompt Library is complete.
+- Do not continue to Milestone 10 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -47,10 +48,18 @@
 ## Milestone 8 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 8 Verification.md`.
 
-## Milestone 9 Pending Approval
+## Milestone 9 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 9 Verification.md`.
+
+## Milestone 10 Pending Approval
+- AI-Assisted Classification.
+- Add request-driven AI suggestions for classification without autonomous action.
+- Do not add autonomous actions, integrations, Morning Brief automation, prompt execution, or API-hardening backlog work.
+
+## Completed Milestone 9 Scope
 - Minimal My Arsenal and Prompt Library.
-- Add searchable inventory and prompt library with copy support only.
-- Do not add Morning Brief, AI, external integrations, exports, semantic search, vector database, or future unapproved modules.
+- Added searchable My Arsenal and Prompt Library records with create, list, read, update, archive, favorite, and copy support.
+- Did not add AI recommendations, auto-crawling, automatic inventory, prompt execution, prompt versioning, prompt variables/templates, tool activation, external integrations, export changes, API hardening, or Milestone 10 work.
 
 ## Completed Milestone 8 Scope
 - Export and Portability.
@@ -106,7 +115,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 9 implementation
+- Milestone 10 implementation
 - Dashboard design
 - Future product modules
 - AI behavior

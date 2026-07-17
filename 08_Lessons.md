@@ -48,3 +48,6 @@
 - Export tests should compare exported keys to SQLite table columns so stored fields are not silently missed as modules evolve.
 - Exporting direct table rows keeps SQLite as the live source of truth and avoids accidentally turning Markdown or JSON into a second operating system.
 - Calculated fields such as `due_soon` should stay out of stored-field exports unless they become persisted schema fields later.
+- My Arsenal and Prompt Library can follow the same simple module pattern as earlier slices; no tag table, prompt versioning, or workflow abstraction is needed for basic reuse.
+- Favorite is clearer and safer as a boolean field than as another status because prompts still need normal lifecycle status.
+- Clipboard copy should be treated as a UI-only action that copies `full_prompt` and does not create records, execute prompts, or log prompt content.

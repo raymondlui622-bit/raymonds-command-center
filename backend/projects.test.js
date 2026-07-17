@@ -131,7 +131,7 @@ test("archives a project while keeping it retrievable", () => {
   }
 });
 
-test("database initialization creates only approved module tables through milestone 6", () => {
+test("database initialization creates only approved module tables through milestone 9", () => {
   const database = createTestDatabase();
   try {
     const tables = database
@@ -145,8 +145,10 @@ test("database initialization creates only approved module tables through milest
       .map((row) => row.name);
 
     assert.deepEqual(tables, [
+      "arsenal_items",
       "project_updates",
       "projects",
+      "prompt_library_items",
       "raw_captures",
       "review_later_resources",
       "tasks",

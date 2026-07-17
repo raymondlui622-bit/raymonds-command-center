@@ -1,8 +1,10 @@
 import http from "node:http";
+import { handleArsenalItemRequest } from "./arsenalHandlers.js";
 import { getDatabase } from "./db.js";
 import { handleExportRequest } from "./exportHandlers.js";
 import { getHealthPayload } from "./health.js";
 import { handleProjectRequest } from "./projectHandlers.js";
+import { handlePromptLibraryItemRequest } from "./promptLibraryHandlers.js";
 import { handleRawCaptureRequest } from "./rawCaptureHandlers.js";
 import { handleReviewLaterResourceRequest } from "./reviewLaterHandlers.js";
 import { handleSearchRequest } from "./searchHandlers.js";
@@ -31,6 +33,16 @@ const server = http.createServer(async (request, response) => {
 
     const projectHandled = await handleProjectRequest(request, response, database);
     if (projectHandled) {
+      return;
+    }
+
+    const arsenalHandled = await handleArsenalItemRequest(request, response, database);
+    if (arsenalHandled) {
+      return;
+    }
+
+    const promptLibraryHandled = await handlePromptLibraryItemRequest(request, response, database);
+    if (promptLibraryHandled) {
       return;
     }
   } catch (error) {

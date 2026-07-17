@@ -190,3 +190,9 @@ Raymond approved Milestone 8 - Export and Portability as a narrow milestone. The
 
 ### 2026-07-17 - Milestone 8 completed with read-only exports
 Milestone 8 added `/export.json` and `/export.md` for Raw Captures, Tasks, Review Later Resources, Projects, and Project Updates. Exports include archived records, include top-level metadata, and represent stored SQLite fields. SQLite remains the only live source of truth, and exports are not represented as import-ready or recovery-compatible.
+
+### 2026-07-17 - Milestone 9 approved to begin
+Raymond approved Milestone 9 - Minimal My Arsenal and Prompt Library as a narrow milestone. The approved schema uses simple SQLite fields only, with `active` and `archived` statuses for both record types. Tags remain simple strings. Prompt Library favorite state is stored as `is_favorite` integer `0` or `1`, not as a status.
+
+### 2026-07-17 - Milestone 9 completed with reusable asset libraries
+Milestone 9 added My Arsenal and Prompt Library records with create, list, read, update, archive, and search support. Prompt Library also supports favorite/unfavorite and a frontend copy button that copies only `full_prompt`. No AI recommendations, auto-crawling, prompt execution, prompt versioning, prompt variables/templates, tool activation, external integrations, export changes, API hardening, new dependencies, or Milestone 10 behavior were added.

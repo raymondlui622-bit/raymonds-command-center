@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
+import { archiveArsenalItem, createArsenalItem } from "./arsenalItems.js";
+import { arsenalItemFixture } from "./arsenalItems.fixture.js";
 import { initializeDatabase } from "./db.js";
+import { archivePromptLibraryItem, createPromptLibraryItem } from "./promptLibraryItems.js";
+import { promptLibraryItemFixture } from "./promptLibraryItems.fixture.js";
 import { createProject, createProjectUpdate } from "./projects.js";
 import { projectFixture, projectUpdateFixture } from "./projects.fixture.js";
 import { createRawCapture } from "./rawCaptures.js";
@@ -22,6 +26,8 @@ test("searches across implemented modules", () => {
     assertSearchResult(database, { q: "resource-url.example" }, "review_later_resource", "resource-for-search");
     assertSearchResult(database, { q: "search foundation project" }, "project", project.id);
     assertSearchResult(database, { q: "append-only update" }, "project_update", "update-for-search");
+    assertSearchResult(database, { q: "asset library tool" }, "arsenal_item", "arsenal-for-search");
+    assertSearchResult(database, { q: "reusable prompt text" }, "prompt_library_item", "prompt-for-search");
   } finally {
     database.close();
   }
@@ -66,6 +72,30 @@ test("status filters exclude project updates because they do not have statuses",
     });
 
     assert.equal(results.some((result) => result.record_type === "project_update"), false);
+  } finally {
+    database.close();
+  }
+});
+
+test("search returns archived arsenal and prompt library records", () => {
+  const database = createTestDatabase();
+  try {
+    seedSearchRecords(database);
+    archiveArsenalItem(database, "arsenal-for-search", "2026-07-17T13:00:00.000Z");
+    archivePromptLibraryItem(database, "prompt-for-search", "2026-07-17T13:00:00.000Z");
+
+    assertSearchResult(
+      database,
+      { q: "asset library tool", status: "archived" },
+      "arsenal_item",
+      "arsenal-for-search",
+    );
+    assertSearchResult(
+      database,
+      { q: "reusable prompt text", status: "archived" },
+      "prompt_library_item",
+      "prompt-for-search",
+    );
   } finally {
     database.close();
   }
@@ -116,6 +146,24 @@ function seedSearchRecords(database) {
     projectUpdateFixture({
       id: "update-for-search",
       update_text: "Append-only update search text",
+    }),
+  );
+  createArsenalItem(
+    database,
+    arsenalItemFixture({
+      id: "arsenal-for-search",
+      name: "Asset library tool",
+      description: "Reusable tool for asset search",
+      tags: "asset,library",
+    }),
+  );
+  createPromptLibraryItem(
+    database,
+    promptLibraryItemFixture({
+      id: "prompt-for-search",
+      title: "Reusable prompt title",
+      full_prompt: "Reusable prompt text for project recovery",
+      tags: "prompt,library",
     }),
   );
 

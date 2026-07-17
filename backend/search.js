@@ -4,6 +4,8 @@ const searchableModules = Object.freeze([
   "review_later_resource",
   "project",
   "project_update",
+  "arsenal_item",
+  "prompt_library_item",
 ]);
 
 export function searchRecords(database, filters = {}) {
@@ -27,6 +29,12 @@ export function searchRecords(database, filters = {}) {
   }
   if (!recordType || recordType === "project_update") {
     results.push(...searchProjectUpdates(database, { query, status, relatedProjectId }));
+  }
+  if (!recordType || recordType === "arsenal_item") {
+    results.push(...searchArsenalItems(database, { query, status, relatedProjectId }));
+  }
+  if (!recordType || recordType === "prompt_library_item") {
+    results.push(...searchPromptLibraryItems(database, { query, status, relatedProjectId }));
   }
 
   return results.sort((first, second) => second.sort_date.localeCompare(first.sort_date));
@@ -192,6 +200,75 @@ function searchProjectUpdates(database, filters) {
         project_id AS related_project_id,
         created_at AS sort_date
       FROM project_updates
+      ${whereClause(where)}
+      ORDER BY created_at DESC, id DESC
+    `)
+    .all(params);
+}
+
+function searchArsenalItems(database, filters) {
+  if (filters.relatedProjectId) {
+    return [];
+  }
+
+  const where = [];
+  const params = {};
+
+  addKeywordFilter(where, params, filters.query, [
+    "name",
+    "category",
+    "description",
+    "url",
+    "tags",
+    "notes",
+  ]);
+  addExactFilter(where, params, "status", filters.status, "status");
+
+  return database
+    .prepare(`
+      SELECT
+        'arsenal_item' AS record_type,
+        id,
+        name AS title,
+        COALESCE(description, url, notes, '') AS summary,
+        status,
+        NULL AS related_project_id,
+        created_at AS sort_date
+      FROM arsenal_items
+      ${whereClause(where)}
+      ORDER BY created_at DESC, id DESC
+    `)
+    .all(params);
+}
+
+function searchPromptLibraryItems(database, filters) {
+  if (filters.relatedProjectId) {
+    return [];
+  }
+
+  const where = [];
+  const params = {};
+
+  addKeywordFilter(where, params, filters.query, [
+    "title",
+    "category",
+    "description",
+    "full_prompt",
+    "tags",
+  ]);
+  addExactFilter(where, params, "status", filters.status, "status");
+
+  return database
+    .prepare(`
+      SELECT
+        'prompt_library_item' AS record_type,
+        id,
+        title,
+        COALESCE(description, full_prompt, '') AS summary,
+        status,
+        NULL AS related_project_id,
+        created_at AS sort_date
+      FROM prompt_library_items
       ${whereClause(where)}
       ORDER BY created_at DESC, id DESC
     `)
