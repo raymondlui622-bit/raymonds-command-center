@@ -25,6 +25,22 @@ export function buildExportPayload(database, exportedAt = new Date().toISOString
       ),
       projects: selectAll(database, "projects", "created_at DESC, id DESC"),
       project_updates: selectAll(database, "project_updates", "created_at DESC, id DESC"),
+      arsenal_items: selectAll(database, "arsenal_items", "created_at DESC, id DESC"),
+      prompt_library_items: selectAll(
+        database,
+        "prompt_library_items",
+        "created_at DESC, id DESC",
+      ),
+      classification_corrections: selectAll(
+        database,
+        "classification_corrections",
+        "created_at DESC, id DESC",
+      ),
+      morning_brief_items: selectAll(
+        database,
+        "morning_brief_items",
+        "created_at DESC, id DESC",
+      ),
     },
   };
 }
@@ -51,6 +67,10 @@ export function renderMarkdownExport(database) {
   appendRecordSection(lines, "Review Later Resources", payload.data.review_later_resources);
   appendRecordSection(lines, "Projects", payload.data.projects);
   appendRecordSection(lines, "Project Updates", payload.data.project_updates);
+  appendRecordSection(lines, "My Arsenal Items", payload.data.arsenal_items);
+  appendRecordSection(lines, "Prompt Library Items", payload.data.prompt_library_items);
+  appendRecordSection(lines, "Classification Corrections", payload.data.classification_corrections);
+  appendRecordSection(lines, "Morning Brief Items", payload.data.morning_brief_items);
 
   return `${lines.join("\n")}\n`;
 }

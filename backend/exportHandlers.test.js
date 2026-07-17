@@ -27,6 +27,17 @@ test("export handler returns JSON download", async () => {
       /^attachment; filename="raymond-command-center-export-\d{4}-\d{2}-\d{2}\.json"$/,
     );
     assert.equal(response.json.data.raw_captures[0].id, "json-export-capture");
+    assert.deepEqual(Object.keys(response.json.data), [
+      "raw_captures",
+      "tasks",
+      "review_later_resources",
+      "projects",
+      "project_updates",
+      "arsenal_items",
+      "prompt_library_items",
+      "classification_corrections",
+      "morning_brief_items",
+    ]);
   } finally {
     database.close();
   }
@@ -53,6 +64,10 @@ test("export handler returns Markdown download", async () => {
     );
     assert.match(response.body, /# Raymond Command Center Export/);
     assert.match(response.body, /markdown-export-capture/);
+    assert.match(response.body, /## My Arsenal Items/);
+    assert.match(response.body, /## Prompt Library Items/);
+    assert.match(response.body, /## Classification Corrections/);
+    assert.match(response.body, /## Morning Brief Items/);
   } finally {
     database.close();
   }
