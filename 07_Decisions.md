@@ -184,3 +184,9 @@ Raymond identified future backlog items to keep `due_soon` calculated and never 
 
 ### 2026-07-16 - Milestone 7 completed with simple keyword search
 Milestone 7 added direct SQLite keyword search over existing Raw Captures, Tasks, Review Later Resources, Projects, and Project Updates, with status and related-project filters where applicable. No search tables, semantic search, vector database, AI, exports, or future module tables were added.
+
+### 2026-07-17 - Milestone 8 approved to begin
+Raymond approved Milestone 8 - Export and Portability as a narrow milestone. The scope is read-only JSON and Markdown exports for currently implemented records only. Import, restore, scheduled backups, ZIP files, file-location controls, AI summaries, search changes, API hardening, UI polish, and new dependencies are out of scope.
+
+### 2026-07-17 - Milestone 8 completed with read-only exports
+Milestone 8 added `/export.json` and `/export.md` for Raw Captures, Tasks, Review Later Resources, Projects, and Project Updates. Exports include archived records, include top-level metadata, and represent stored SQLite fields. SQLite remains the only live source of truth, and exports are not represented as import-ready or recovery-compatible.

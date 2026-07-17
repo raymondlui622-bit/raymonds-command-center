@@ -45,3 +45,6 @@
 - Milestone 7 did not need a search index table yet; direct keyword queries over the existing local SQLite tables were enough for the approved acceptance checks.
 - Search filters should respect the fields each record actually has. Project Updates have no status, so status-filtered searches should not pretend they do.
 - Keeping tags as a simple string keeps Review Later searchable without introducing taxonomy or tag-table maintenance too early.
+- Export tests should compare exported keys to SQLite table columns so stored fields are not silently missed as modules evolve.
+- Exporting direct table rows keeps SQLite as the live source of truth and avoids accidentally turning Markdown or JSON into a second operating system.
+- Calculated fields such as `due_soon` should stay out of stored-field exports unless they become persisted schema fields later.

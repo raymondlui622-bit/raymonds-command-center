@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 7 Complete.
+Phase 3 - Milestone 8 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -95,16 +95,24 @@ Phase 3 - Milestone 7 Complete.
 - Confirmed filters support status and related project where applicable.
 - Confirmed no semantic search or vector database exists.
 - Created `10_DELIVERABLES/Milestone 7 Verification.md`.
+- Raymond approved Milestone 8 - Export and Portability.
+- Completed Milestone 8 - Export and Portability.
+- Added read-only JSON and Markdown exports.
+- Added export routes for `/export.json` and `/export.md`.
+- Added minimal frontend download controls.
+- Confirmed exports include Raw Captures, Tasks, Review Later Resources, Projects, and Project Updates.
+- Confirmed archived records are included.
+- Confirmed stored fields are represented without claiming import readiness.
+- Confirmed exports do not mutate records.
+- Created `10_DELIVERABLES/Milestone 8 Verification.md`.
 
 ## Not Started
-- Milestone 8 - Export and Portability.
-- Markdown export.
-- JSON export.
+- Milestone 9 - Minimal My Arsenal and Prompt Library.
 - Integration planning.
 - Future module database tables.
 
 ## Current Blocker
-Milestone 8 is blocked until Raymond explicitly approves it to begin.
+Milestone 9 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 7 results. If approved, explicitly approve Milestone 8 - Export and Portability.
+Review Milestone 8 results. If approved, explicitly approve Milestone 9 - Minimal My Arsenal and Prompt Library.

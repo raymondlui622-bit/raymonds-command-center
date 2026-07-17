@@ -1,5 +1,6 @@
 import http from "node:http";
 import { getDatabase } from "./db.js";
+import { handleExportRequest } from "./exportHandlers.js";
 import { getHealthPayload } from "./health.js";
 import { handleProjectRequest } from "./projectHandlers.js";
 import { handleRawCaptureRequest } from "./rawCaptureHandlers.js";
@@ -43,6 +44,11 @@ const server = http.createServer(async (request, response) => {
 
   const searchHandled = await handleSearchRequest(request, response, database);
   if (searchHandled) {
+    return;
+  }
+
+  const exportHandled = await handleExportRequest(request, response, database);
+  if (exportHandled) {
     return;
   }
 

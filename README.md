@@ -33,3 +33,12 @@ Run tests:
 ```sh
 npm test
 ```
+
+## Exports
+
+With the backend running, download read-only exports:
+
+- JSON: `http://127.0.0.1:3001/export.json`
+- Markdown: `http://127.0.0.1:3001/export.md`
+
+Exports include Raw Captures, Tasks, Review Later Resources, Projects, and Project Updates, including archived records. SQLite remains the live source of truth.

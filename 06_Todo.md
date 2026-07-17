@@ -20,7 +20,8 @@
 - Milestone 5 - Review Later Resources is complete.
 - Milestone 6 - Projects and Project Updates is complete.
 - Milestone 7 - Search Foundation is complete.
-- Do not continue to Milestone 8 without explicit approval.
+- Milestone 8 - Export and Portability is complete.
+- Do not continue to Milestone 9 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -43,10 +44,18 @@
 ## Milestone 7 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 7 Verification.md`.
 
-## Milestone 8 Pending Approval
+## Milestone 8 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 8 Verification.md`.
+
+## Milestone 9 Pending Approval
+- Minimal My Arsenal and Prompt Library.
+- Add searchable inventory and prompt library with copy support only.
+- Do not add Morning Brief, AI, external integrations, exports, semantic search, vector database, or future unapproved modules.
+
+## Completed Milestone 8 Scope
 - Export and Portability.
-- Add Markdown and JSON exports for implemented core records.
-- Do not add Morning Brief, AI, Arsenal, Prompt Library, semantic search, vector database, or future module tables.
+- Added read-only Markdown and JSON exports for implemented core records.
+- Did not add import/restore, scheduled backups, ZIP files, AI summaries, search changes, API hardening, or UI polish.
 
 ## Completed Milestone 7 Scope
 - Search Foundation.
@@ -97,7 +106,7 @@ These are future concepts, not approved Version 1 build scope:
 - AI news, real estate news, and landlord news automation
 
 ## Do Not Start Yet
-- Milestone 8 implementation
+- Milestone 9 implementation
 - Dashboard design
 - Future product modules
 - AI behavior

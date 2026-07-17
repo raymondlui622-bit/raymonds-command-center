@@ -363,6 +363,18 @@ function App() {
         </ul>
       )}
 
+      <h1>Export</h1>
+      <p>
+        <a href={`${apiBaseUrl}/export.json`} download>
+          Download JSON export
+        </a>
+      </p>
+      <p>
+        <a href={`${apiBaseUrl}/export.md`} download>
+          Download Markdown export
+        </a>
+      </p>
+
       <h1>Raw Capture</h1>
       <p>Backend: {health}</p>
 
