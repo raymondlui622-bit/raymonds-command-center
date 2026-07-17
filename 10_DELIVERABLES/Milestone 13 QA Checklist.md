@@ -1,7 +1,8 @@
 # Milestone 13 QA Checklist - Version 1 Stabilization and QA
 
-Status: In progress
+Status: Complete
 Date: 2026-07-17
+Evidence: See Milestone 13 QA Report and Milestone 13 Known Issues for findings M13-001, M13-002, M13-003 and detailed results.
 Scope: Stabilization, bug discovery, verification, documentation, and release readiness only.
 
 ## Scope Guard
@@ -37,129 +38,129 @@ Every finding must be classified as exactly one severity.
 - Visual, wording, or presentation issue only
 
 ## Frozen-Document Alignment
-- [ ] Phase 1 PRD reviewed.
-- [ ] Phase 2 Technical Architecture reviewed.
-- [ ] Phase 2.5 Data Model reviewed.
-- [ ] Phase 3 Implementation Plan reviewed.
-- [ ] Progress, Todo, Decisions, and Lessons reviewed.
-- [ ] Prior milestone verification documents reviewed.
-- [ ] Confirmed Milestone 13 remains stabilization-only.
+- [x] Phase 1 PRD reviewed.
+- [x] Phase 2 Technical Architecture reviewed.
+- [x] Phase 2.5 Data Model reviewed.
+- [x] Phase 3 Implementation Plan reviewed.
+- [x] Progress, Todo, Decisions, and Lessons reviewed.
+- [x] Prior milestone verification documents reviewed.
+- [x] Confirmed Milestone 13 remains stabilization-only.
 
 ## Automated Verification
-- [ ] `npm test`
-- [ ] `git diff --check`
-- [ ] Package files unchanged unless approved.
-- [ ] `data/command-center.sqlite` unchanged or restored after QA.
-- [ ] Git status reviewed.
+- [x] `npm test`
+- [x] `git diff --check`
+- [x] Package files unchanged unless approved.
+- [x] `data/command-center.sqlite` unchanged or restored after QA.
+- [x] Git status reviewed.
 
 ## Database Verification
-- [ ] Current database backed up before destructive or high-volume QA.
-- [ ] SQLite integrity check performed on backup.
-- [ ] Fresh database initialization verified.
-- [ ] Existing database upgrade/idempotency verified.
-- [ ] Backup restore procedure verified.
+- [x] Current database backed up before destructive or high-volume QA.
+- [x] SQLite integrity check performed on backup.
+- [x] Fresh database initialization verified.
+- [x] Existing database upgrade/idempotency verified.
+- [x] Backup restore procedure verified.
 
 ## End-to-End User Flows
-- [ ] Raw Capture create/view/archive.
-- [ ] Raw Capture classification request, review, edit, accept, reject, duplicate accept protection.
-- [ ] Task create/list/read/update/complete/archive/search.
-- [ ] Review Later create/list/read/update/archive/search.
-- [ ] Project create/update/archive/search.
-- [ ] Project Updates append-only create/list.
-- [ ] Get Back on Track deterministic summary.
-- [ ] Get Back on Track no-key fallback.
-- [ ] Get Back on Track live AI narrative.
-- [ ] My Arsenal create/list/read/update/archive/search.
-- [ ] Prompt Library create/list/read/update/favorite/copy/archive/search.
-- [ ] Morning Brief generate/latest/history/review actions.
-- [ ] Morning Brief no-key fallback.
-- [ ] Morning Brief live AI narrative.
-- [ ] Export JSON download.
-- [ ] Export Markdown download.
-- [ ] Restart persistence.
+- [x] Raw Capture create/view/archive.
+- [x] Raw Capture classification request, review, edit, accept, reject, duplicate accept protection.
+- [x] Task create/list/read/update/complete/archive/search.
+- [x] Review Later create/list/read/update/archive/search.
+- [x] Project create/update/archive/search.
+- [x] Project Updates append-only create/list.
+- [x] Get Back on Track deterministic summary.
+- [x] Get Back on Track no-key fallback.
+- [x] Get Back on Track live AI narrative.
+- [x] My Arsenal create/list/read/update/archive/search.
+- [x] Prompt Library create/list/read/update/favorite/copy/archive/search.
+- [x] Morning Brief generate/latest/history/review actions.
+- [x] Morning Brief no-key fallback.
+- [x] Morning Brief live AI narrative.
+- [x] Export JSON download.
+- [x] Export Markdown download.
+- [x] Restart persistence.
 
 ## Browser UI Click-Through
-- [ ] Milestone 11 Get Back on Track UI clicked and verified.
-- [ ] Milestone 12 Morning Brief UI clicked and verified.
-- [ ] Browser console checked for errors.
-- [ ] Browser network checked for secret exposure.
+- [x] Milestone 11 Get Back on Track UI clicked and verified.
+- [x] Milestone 12 Morning Brief UI clicked and verified.
+- [x] Browser console checked for errors.
+- [x] Browser network checked for secret exposure.
 
 ## Bundled Live OpenAI Smoke Test
-- [ ] Backend started with server-side `OPENAI_API_KEY`.
-- [ ] Milestone 10.1 classification returns a real suggestion.
-- [ ] Classification uses the live OpenAI Responses API path, not a mock.
-- [ ] Browser never receives the API key.
-- [ ] Only approved minimal data is sent externally.
-- [ ] Server generates `acceptance_id`.
-- [ ] Server attaches trusted local IDs after validation.
-- [ ] Edit and acceptance create exactly one record.
-- [ ] Duplicate acceptance creates no duplicate.
-- [ ] Rejection creates no record.
-- [ ] Original Raw Capture remains unchanged.
-- [ ] Milestone 11 live AI narrative works.
-- [ ] Milestone 12 live AI narrative works.
-- [ ] Logs contain no API key or sensitive test content.
-- [ ] Token usage, model, response time, and approximate cost recorded when available.
+- [x] Backend started with server-side `OPENAI_API_KEY`.
+- [x] Milestone 10.1 classification returns a real suggestion.
+- [x] Classification uses the live OpenAI Responses API path, not a mock.
+- [x] Browser never receives the API key.
+- [x] Only approved minimal data is sent externally.
+- [x] Server generates `acceptance_id`.
+- [x] Server attaches trusted local IDs after validation.
+- [x] Edit and acceptance create exactly one record.
+- [x] Duplicate acceptance creates no duplicate.
+- [x] Rejection creates no record.
+- [x] Original Raw Capture remains unchanged.
+- [x] Milestone 11 live AI narrative works.
+- [x] Milestone 12 live AI narrative works.
+- [x] Logs contain no API key or sensitive test content.
+- [x] Token usage, model, response time, and approximate cost recorded when available.
 
 ## No-Key Fallback
-- [ ] Classification unavailable state works with no key.
-- [ ] No fabricated suggestions with no key.
-- [ ] Get Back on Track deterministic summary works with no key.
-- [ ] Morning Brief deterministic/persisted behavior works with no key.
-- [ ] Failed AI availability creates no records.
+- [x] Classification unavailable state works with no key.
+- [x] No fabricated suggestions with no key.
+- [x] Get Back on Track deterministic summary works with no key.
+- [x] Morning Brief deterministic/persisted behavior works with no key.
+- [x] Failed AI availability creates no records.
 
 ## Export Integrity
-- [ ] Export metadata present.
-- [ ] Required archived records included.
-- [ ] Stored fields represented for approved export scope.
-- [ ] Export does not mutate SQLite.
-- [ ] Export contains no secrets.
-- [ ] Any export coverage gap is classified and documented.
+- [x] Export metadata present.
+- [x] Required archived records included.
+- [x] Stored fields represented for approved export scope.
+- [x] Export does not mutate SQLite.
+- [x] Export contains no secrets.
+- [x] Any export coverage gap is classified and documented.
 
 ## Source-Record No-Mutation
-- [ ] Classification request preserves Raw Capture.
-- [ ] Classification rejection creates nothing.
-- [ ] Get Back on Track mutates no source records.
-- [ ] Morning Brief generation mutates no source records.
-- [ ] Morning Brief review actions mutate only Morning Brief items.
-- [ ] Search mutates no records.
-- [ ] Export mutates no records.
+- [x] Classification request preserves Raw Capture.
+- [x] Classification rejection creates nothing.
+- [x] Get Back on Track mutates no source records.
+- [x] Morning Brief generation mutates no source records.
+- [x] Morning Brief review actions mutate only Morning Brief items.
+- [x] Search mutates no records.
+- [x] Export mutates no records.
 
 ## Error-State Coverage
-- [ ] Missing required fields.
-- [ ] Invalid statuses.
-- [ ] Invalid IDs.
-- [ ] Not-found records.
-- [ ] Duplicate acceptance.
-- [ ] Unsupported AI output.
-- [ ] Provider timeout/error.
-- [ ] Empty datasets.
-- [ ] Archived records.
-- [ ] Malformed JSON behavior documented without implementing API-hardening backlog.
+- [x] Missing required fields.
+- [x] Invalid statuses.
+- [x] Invalid IDs.
+- [x] Not-found records.
+- [x] Duplicate acceptance.
+- [x] Unsupported AI output.
+- [x] Provider timeout/error.
+- [x] Empty datasets.
+- [x] Archived records.
+- [x] Malformed JSON behavior documented without implementing API-hardening backlog.
 
 ## Security Checks
-- [ ] No API key in frontend source.
-- [ ] No API key in browser requests.
-- [ ] No API key in SQLite.
-- [ ] No API key in exports.
-- [ ] No API key in logs.
-- [ ] No API key in committed files.
-- [ ] No raw provider responses, authorization headers, stack traces, or secrets exposed.
-- [ ] No unapproved external integrations.
+- [x] No API key in frontend source.
+- [x] No API key in browser requests.
+- [x] No API key in SQLite.
+- [x] No API key in exports.
+- [x] No API key in logs.
+- [x] No API key in committed files.
+- [x] No raw provider responses, authorization headers, stack traces, or secrets exposed.
+- [x] No unapproved external integrations.
 
 ## Performance Checks
-- [ ] Local startup acceptable.
-- [ ] Core create/update/search/export actions responsive on representative local data.
-- [ ] AI requests respect timeout behavior.
-- [ ] UI remains usable during AI requests.
-- [ ] Morning Brief and search do not noticeably freeze the browser.
+- [x] Local startup acceptable.
+- [x] Core create/update/search/export actions responsive on representative local data.
+- [x] AI requests respect timeout behavior.
+- [x] UI remains usable during AI requests.
+- [x] Morning Brief and search do not noticeably freeze the browser.
 
 ## Final Release Checklist
-- [ ] Findings grouped by severity.
-- [ ] Known issues documented.
-- [ ] Deferred backlog confirmed.
-- [ ] README updated if release usage notes need correction.
-- [ ] Binder updated.
-- [ ] Milestone 13 QA Report completed.
-- [ ] Milestone 13 Verification completed.
-- [ ] Final Version 1 release decision recorded as PASS or FAIL.
+- [x] Findings grouped by severity.
+- [x] Known issues documented.
+- [x] Deferred backlog confirmed.
+- [x] README updated if release usage notes need correction.
+- [x] Binder updated.
+- [x] Milestone 13 QA Report completed.
+- [x] Milestone 13 Verification completed.
+- [x] Final Version 1 release decision recorded as PASS or FAIL.

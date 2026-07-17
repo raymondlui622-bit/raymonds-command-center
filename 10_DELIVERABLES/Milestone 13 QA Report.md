@@ -1,6 +1,6 @@
 # Milestone 13 QA Report - Version 1 Stabilization and QA
 
-Status: Paused for Raymond review
+Status: Complete - PASS recommended
 Date: 2026-07-17
 
 ## Scope
@@ -9,7 +9,7 @@ Milestone 13 verifies Version 1 release readiness. It does not add features, rec
 Application defects discovered during QA must be reproduced, classified, documented, and reported before any fix is attempted.
 
 ## Release Decision
-Pending. M13-002 is resolved and the bundled live smoke test has run. QA is paused for Raymond review of new Critical defect M13-003 before any code change or final PASS/FAIL decision.
+PASS recommended. All three Critical findings (M13-001, M13-002, M13-003) are resolved and verified. Remaining items are documented deferred backlog. Formal Version 1 sign-off is Raymond's acceptance of this recommendation.
 
 The final decision must be exactly one of:
 
@@ -93,7 +93,7 @@ Raymond started the backend at `127.0.0.1:3001` from a Terminal session holding 
 
 Severity: Critical
 
-Blocks Version 1: No, once the approved fix is committed. Fix applied and live-verified 2026-07-17; awaiting Raymond's diff review and commit approval.
+Blocks Version 1: No. Fixed with Raymond approval in commit `86fb8689a4e7d3b7b0e821e01abd2f3e7d77b930` and live-verified 2026-07-17.
 
 Steps to reproduce:
 1. Start the backend with a valid server-side `OPENAI_API_KEY`.
@@ -113,7 +113,7 @@ Affected files:
 - `backend/projectResumeSummary.js`
 
 Resolution:
-Raymond approved the narrow fix. `max_output_tokens` for the resume narrative request was raised from 300 to 500 (matching the classification path); a regression test now locks the budget. Live re-test after backend restart: `narrative_status: "available"` with grounded non-empty narratives on 2/2 attempts (6.5-6.8s, model `gpt-5-mini`, token usage not surfaced by the app, estimated cost under one cent), deterministic fields unchanged, no records created or mutated, no key or test content in logs, database restored from the verified pre-QA backup (checksum match, integrity `ok`), `npm test` 100/100, `git diff --check` clean, package files unchanged. Awaiting Raymond's diff review before commit.
+Raymond approved the narrow fix. `max_output_tokens` for the resume narrative request was raised from 300 to 500 (matching the classification path); a regression test now locks the budget. Live re-test after backend restart: `narrative_status: "available"` with grounded non-empty narratives on 2/2 attempts (6.5-6.8s, model `gpt-5-mini`, token usage not surfaced by the app, estimated cost under one cent), deterministic fields unchanged, no records created or mutated, no key or test content in logs, database restored from the verified pre-QA backup (checksum match, integrity `ok`), `npm test` 100/100, `git diff --check` clean, package files unchanged. Raymond approved the diff; committed as `86fb8689a4e7d3b7b0e821e01abd2f3e7d77b930`.
 
 ### Major
 None recorded yet.
@@ -205,10 +205,27 @@ Passed:
 Passed for the live smoke test scope: key confined to Raymond's server-start Terminal environment; never printed, stored, or logged by QA; absent from frontend code, HTTP responses, backend logs, and database content.
 
 ## Performance and Responsiveness Results
-Pending.
+Passed:
+- Local CRUD, search, error-state, and export requests responded immediately over HTTP.
+- Live AI requests completed in 4.7-6.8 seconds, within the 15-second timeout; timeout behavior is covered by automated tests.
+- Export endpoints returned complete payloads instantly and did not mutate the database.
+
+## Error-State Results
+Passed:
+- Live spot checks: missing required field returned 400, unknown record returned 404, malformed JSON returned 400, invalid Morning Brief review status rejected; none created records.
+- Automated suite covers invalid statuses, invalid IDs, not-found records, duplicate acceptance, unsupported AI output, provider timeout and error, empty datasets, and archived records.
+- Malformed JSON handling remains documented as a deferred backlog item, per scope.
 
 ## Deferred Backlog Confirmed
-Pending.
+Confirmed. The deferred backlog is documented in Milestone 13 Known Issues. No deferred item is a release blocker.
 
 ## Version 1 Release Recommendation
-Pending. Current QA state cannot recommend PASS while Critical defect M13-003 (Milestone 11 live narrative failure) is unresolved. Awaiting Raymond's decision on the proposed narrow fix.
+
+### PASS
+
+Version 1 is recommended for release.
+
+- All release blockers are resolved: M13-001 fixed in commit `09a398c0e58d7685bb2a3ad5568c97d2d9eed99f`, M13-002 resolved by running the bundled live OpenAI smoke test on 2026-07-17, M13-003 fixed and live-verified in commit `86fb8689a4e7d3b7b0e821e01abd2f3e7d77b930`.
+- Remaining issues are documented in Milestone 13 Known Issues.
+- Remaining issues are explicitly deferred backlog items; none blocks Version 1.
+- Final evidence: full `npm test` 100/100, `git diff --check` clean, package files unchanged, database restored to the verified pre-QA state, no secrets in code, database, exports, or logs.

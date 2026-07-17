@@ -1,6 +1,6 @@
 # Milestone 13 Known Issues
 
-Status: In progress
+Status: Complete
 Date: 2026-07-17
 
 ## Severity Definitions
@@ -86,7 +86,7 @@ Resolved without code changes. Raymond started the backend from a Terminal sessi
 
 Severity: Critical
 
-Blocks Version 1: No, once the approved fix is committed. Fix applied and live-verified 2026-07-17; awaiting Raymond's diff review and commit approval.
+Blocks Version 1: No. Fixed with Raymond approval in commit `86fb8689a4e7d3b7b0e821e01abd2f3e7d77b930` and live-verified 2026-07-17.
 
 Steps to reproduce:
 1. Start the backend with a valid server-side `OPENAI_API_KEY`.
