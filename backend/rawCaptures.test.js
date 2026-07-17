@@ -12,7 +12,6 @@ import {
 import { rawCaptureFixture } from "./rawCaptures.fixture.js";
 
 const futureModuleTables = [
-  "morning_brief_items",
   "follow_ups",
 ];
 
@@ -80,7 +79,7 @@ test("archives a raw capture while keeping it retrievable", () => {
   }
 });
 
-test("database initialization creates only approved module tables through milestone 10", () => {
+test("database initialization creates only approved module tables through milestone 12", () => {
   const database = createTestDatabase();
   try {
     const tables = database
@@ -101,6 +100,7 @@ test("database initialization creates only approved module tables through milest
     assert.ok(tables.includes("arsenal_items"));
     assert.ok(tables.includes("prompt_library_items"));
     assert.ok(tables.includes("classification_corrections"));
+    assert.ok(tables.includes("morning_brief_items"));
     for (const tableName of futureModuleTables) {
       assert.equal(tables.includes(tableName), false);
     }

@@ -16,6 +16,9 @@ function App() {
   const [promptLibraryItems, setPromptLibraryItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [classificationByCapture, setClassificationByCapture] = useState({});
+  const [morningBrief, setMorningBrief] = useState(null);
+  const [morningBriefStatus, setMorningBriefStatus] = useState("idle");
+  const [showAllRequiresRaymond, setShowAllRequiresRaymond] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -34,7 +37,55 @@ function App() {
     loadProjects();
     loadArsenalItems();
     loadPromptLibraryItems();
+    loadLatestMorningBrief();
   }, []);
+
+  async function loadLatestMorningBrief() {
+    const response = await fetch(`${apiBaseUrl}/morning-brief/latest`);
+    const data = await response.json();
+    setMorningBrief(data.brief_batch_id ? data : null);
+  }
+
+  async function generateMorningBrief() {
+    setMorningBriefStatus("loading");
+    setShowAllRequiresRaymond(false);
+
+    const response = await fetch(`${apiBaseUrl}/morning-brief`, { method: "POST" });
+    if (!response.ok) {
+      setMorningBriefStatus("error");
+      return;
+    }
+
+    const data = await response.json();
+    setMorningBrief(data);
+    setMorningBriefStatus("idle");
+  }
+
+  async function reviewMorningBriefItem(itemId, reviewStatus, section) {
+    const response = await fetch(`${apiBaseUrl}/morning-brief-items/${itemId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ review_status: reviewStatus, section }),
+    });
+
+    if (!response.ok) {
+      setMessage("Morning Brief item was not updated.");
+      return;
+    }
+
+    const data = await response.json();
+    setMorningBrief((current) => {
+      if (!current) {
+        return current;
+      }
+      const items = { ...current.items };
+      for (const key of Object.keys(items)) {
+        items[key] = items[key].filter((item) => item.id !== itemId);
+      }
+      items[data.item.section] = [...items[data.item.section], data.item];
+      return { ...current, items };
+    });
+  }
 
   async function loadCaptures() {
     const response = await fetch(`${apiBaseUrl}/raw-captures`);
@@ -624,6 +675,51 @@ function App() {
 
   return (
     <main>
+      <h1>Morning Brief</h1>
+      <button type="button" onClick={generateMorningBrief} disabled={morningBriefStatus === "loading"}>
+        {morningBrief ? "Refresh Morning Brief" : "Generate Morning Brief"}
+      </button>
+      {morningBriefStatus === "loading" ? <p>Generating brief...</p> : null}
+      {morningBriefStatus === "error" ? <p>Morning Brief could not be generated.</p> : null}
+      {morningBrief ? (
+        <>
+          <p>Generated: {morningBrief.generated_at}</p>
+          <p>AI status: {morningBrief.ai_status ?? "unavailable"}</p>
+
+          <h2>Requires Raymond</h2>
+          {renderMorningBriefItems({
+            items: showAllRequiresRaymond
+              ? morningBrief.items.requires_raymond
+              : morningBrief.items.requires_raymond.slice(0, 7),
+            onReview: reviewMorningBriefItem,
+          })}
+          {morningBrief.items.requires_raymond.length > 7 ? (
+            <button type="button" onClick={() => setShowAllRequiresRaymond((current) => !current)}>
+              {showAllRequiresRaymond
+                ? "Show fewer"
+                : `Show ${morningBrief.items.requires_raymond.length - 7} more`}
+            </button>
+          ) : null}
+
+          <h2>Needs Verification</h2>
+          {renderMorningBriefItems({
+            items: morningBrief.items.needs_verification,
+            onReview: reviewMorningBriefItem,
+          })}
+
+          <h2>Waiting on Others</h2>
+          {renderMorningBriefItems({
+            items: morningBrief.items.waiting_on_others,
+            onReview: reviewMorningBriefItem,
+          })}
+
+          <h2>FYI</h2>
+          {renderMorningBriefItems({ items: morningBrief.items.fyi, onReview: reviewMorningBriefItem })}
+        </>
+      ) : (
+        <p>No Morning Brief generated yet.</p>
+      )}
+
       <h1>Search</h1>
       <form onSubmit={search}>
         <label htmlFor="search-query">Keyword</label>
@@ -1367,6 +1463,67 @@ function App() {
     </main>
   );
 }
+
+function renderMorningBriefItems({ items, onReview }) {
+  if (items.length === 0) {
+    return <p>No items.</p>;
+  }
+
+  return (
+    <ul>
+      {items.map((item) => (
+        <li key={item.id}>
+          <p>{item.title}</p>
+          <p>{item.summary}</p>
+          <p>Reason: {item.reason}</p>
+          <p>Importance: {item.importance}</p>
+          <p>Suggested action: {item.suggested_action}</p>
+          {item.ai_narrative ? <p>AI narrative: {item.ai_narrative}</p> : null}
+          <p>Status: {item.review_status}</p>
+
+          {item.review_status === "proposed" ? (
+            <>
+              <button type="button" onClick={() => onReview(item.id, "accepted")}>
+                Accept
+              </button>
+              <button type="button" onClick={() => onReview(item.id, "dismissed")}>
+                Dismiss
+              </button>
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const formData = new FormData(event.currentTarget);
+                  onReview(item.id, "corrected", formData.get("section"));
+                }}
+              >
+                <label htmlFor={`morning-brief-correct-section-${item.id}`}>Correct section</label>
+                <select
+                  id={`morning-brief-correct-section-${item.id}`}
+                  name="section"
+                  defaultValue={item.section}
+                >
+                  {morningBriefSections.map((section) => (
+                    <option key={section} value={section}>
+                      {section}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit">Correct</button>
+              </form>
+            </>
+          ) : null}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const morningBriefSections = [
+  "requires_raymond",
+  "needs_verification",
+  "waiting_on_others",
+  "fyi",
+];
 
 function renderResumeSummary(state) {
   if (!state) {

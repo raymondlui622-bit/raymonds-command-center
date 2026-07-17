@@ -2,6 +2,7 @@ import http from "node:http";
 import { handleArsenalItemRequest } from "./arsenalHandlers.js";
 import { handleClassificationRequest } from "./classificationHandlers.js";
 import { getDatabase } from "./db.js";
+import { handleMorningBriefRequest } from "./morningBriefHandlers.js";
 import { handleExportRequest } from "./exportHandlers.js";
 import { getHealthPayload } from "./health.js";
 import { handleProjectRequest } from "./projectHandlers.js";
@@ -49,6 +50,11 @@ const server = http.createServer(async (request, response) => {
 
     const classificationHandled = await handleClassificationRequest(request, response, database);
     if (classificationHandled) {
+      return;
+    }
+
+    const morningBriefHandled = await handleMorningBriefRequest(request, response, database);
+    if (morningBriefHandled) {
       return;
     }
   } catch (error) {

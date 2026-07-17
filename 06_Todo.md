@@ -25,7 +25,8 @@
 - Milestone 10 - AI-Assisted Classification is complete.
 - Milestone 10.1 - Live AI Provider Connection is complete (live OpenAI verification deferred).
 - Milestone 11 - Get Back on Track Summaries is complete.
-- Do not continue to Milestone 12 without explicit approval.
+- Milestone 12 - Read-Only AI-Assisted Morning Brief is complete (persisted, live OpenAI narrative verification deferred).
+- Do not continue to Milestone 13 without explicit approval.
 
 ## Milestone 1 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 1 Verification.md`.
@@ -63,8 +64,11 @@
 ## Milestone 11 Verification Gate
 - Completed. See `10_DELIVERABLES/Milestone 11 Verification.md`. Live OpenAI narrative verification deferred to the same bundled Version 1 smoke test.
 
-## Milestone 12 Pending Approval
-- Read-Only AI-Assisted Morning Brief.
+## Milestone 12 Verification Gate
+- Completed. See `10_DELIVERABLES/Milestone 12 Verification.md`. Live OpenAI narrative verification deferred to the same bundled Version 1 smoke test.
+
+## Milestone 13 Pending Approval
+- Version 1 Stabilization and QA.
 - Do not begin without explicit approval.
 
 ## Completed Milestone 10 Scope
@@ -74,6 +78,15 @@
 - Added safe unavailable runtime behavior because no AI provider/model has been approved or configured.
 - Tests use deterministic mocked provider responses.
 - Did not add autonomous classification, background/batch classification, Projects, Project Updates, Morning Brief generation, Get Back on Track summaries, external integrations, prompt execution, model training, embeddings, export changes, search redesign, API hardening, or Milestone 11 work.
+
+## Completed Milestone 12 Scope
+- Read-Only AI-Assisted Morning Brief (persisted, request-driven).
+- Added `morning_brief_items` table and `POST /morning-brief`, `GET /morning-brief/latest`, `GET /morning-brief/history`, `PATCH /morning-brief-items/:id`.
+- Deterministic four-section assembly from Tasks, Projects, Raw Captures, Review Later Resources; fixed per-section `importance`; `confidence` inert at `1.0`.
+- All matching items always saved and returned; 7-item Requires Raymond display cap is frontend-only.
+- Optional AI narrative enrichment only, reusing Milestone 10.1/11 OpenAI provider plumbing; no AI-driven placement, ranking, or risk judgment.
+- No source record mutation under any condition, verified across all seven source tables.
+- Did not add automatic scheduling, notifications, email delivery, external integrations, AI-driven section placement, write-back to source records, a parent "Morning Briefs" table, or Milestone 13 work.
 
 ## Completed Milestone 11 Scope
 - Get Back on Track Summaries.

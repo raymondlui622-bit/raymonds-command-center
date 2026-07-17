@@ -1,7 +1,7 @@
 # Raymond Command Center - Progress
 
 ## Current Phase
-Phase 3 - Milestone 11 Complete.
+Phase 3 - Milestone 12 Complete.
 
 ## Completed
 - Created the clean Phase 0 project binder.
@@ -141,14 +141,22 @@ Phase 3 - Milestone 11 Complete.
 - Added a minimal Get Back on Track section to the existing project list UI with a manual refresh action.
 - Confirmed no dependencies added and full regression suite passes (`npm test`).
 - Created `10_DELIVERABLES/Milestone 11 Proposal.md` and `10_DELIVERABLES/Milestone 11 Verification.md`.
+- Raymond approved Milestone 12 - Read-Only AI-Assisted Morning Brief as a persisted, request-driven milestone, after two rounds of proposal revision (batch identity, importance rules, and the frozen-model-vs-read-only conflict resolved through explicit questions and answers, documented in `10_DELIVERABLES/Milestone 12 Proposal.md`).
+- Completed Milestone 12: added `morning_brief_items` (16 columns: 12 from the frozen Phase 2.5 model, 4 new - `brief_batch_id`, `generated_at`, `ai_narrative`, `corrected_note`).
+- Added `POST /morning-brief`, `GET /morning-brief/latest`, `GET /morning-brief/history`, `PATCH /morning-brief-items/:id`.
+- Confirmed deterministic section rules (Requires Raymond, Needs Verification, Waiting on Others, FYI) read only Tasks, Projects, Raw Captures, and Review Later Resources, and that `confidence` stays fixed at `1.0` and `importance` stays fixed per section - neither used for ranking, filtering, or display.
+- Confirmed all matching items are always saved and returned; the 7-item Requires Raymond cap is frontend-only (`src/main.jsx` expand control), with no server-side truncation or downgrade.
+- Confirmed `brief_batch_id` (a `randomUUID()` generated once per request) is the only grouping/identity key; caught and fixed a same-millisecond `generated_at` tie-break bug during testing (switched the SQL tiebreaker from a random `id` to monotonic `rowid`) before it could ship.
+- Confirmed no source record (Tasks, Projects, Raw Captures, Project Updates, Review Later Resources, Arsenal, Prompt Library) is ever mutated by generation or review actions, across all seven source tables.
+- Updated the three pre-existing "approved tables only" regression tests (in `projects.test.js`, `rawCaptures.test.js`, `reviewLaterResources.test.js`) to include `morning_brief_items` as an approved table through Milestone 12.
+- Created `10_DELIVERABLES/Milestone 12 Verification.md`.
 
 ## Not Started
-- Milestone 12 - Read-Only AI-Assisted Morning Brief.
+- Milestone 13 - Version 1 Stabilization and QA.
 - Integration planning.
-- Future module database tables.
 
 ## Current Blocker
-Milestone 12 is blocked until Raymond explicitly approves it to begin.
+Milestone 13 is blocked until Raymond explicitly approves it to begin.
 
 ## Exact Recommended Next Step
-Review Milestone 11 results. If approved, explicitly approve Milestone 12 - Read-Only AI-Assisted Morning Brief. Live OpenAI verification for Milestone 10.1 and Milestone 11 remains bundled into one smoke test near the end of Version 1.
+Review Milestone 12 results. If approved, explicitly approve Milestone 13 - Version 1 Stabilization and QA. Live OpenAI verification for Milestone 10.1, Milestone 11, and Milestone 12 remains bundled into one smoke test near the end of Version 1.
